@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1095875882185",
+    "project_id": "nerala-v1",
+    "storage_bucket": "nerala-v1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095875882185:android:ca742d1b3446832c3d7118",
+        "android_client_info": {
+          "package_name": "com.example.other_screens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeERof9nNHOr58NiUUG3R4CQ0gfIyXHvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095875882185:android:2023e43fc91c3a403d7118",
+        "android_client_info": {
+          "package_name": "com.example.other_screensp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeERof9nNHOr58NiUUG3R4CQ0gfIyXHvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

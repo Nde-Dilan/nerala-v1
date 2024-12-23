@@ -38,6 +38,14 @@ dependencies:
   hugeicons: ^0.0.7
   carousel_slider: ^5.0.0
 
+  # Added
+  firebase_auth:
+  firebase_core:
+  cloud_firestore:
+  flutter_bloc:
+  dartz:
+  get_it:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
