@@ -8,12 +8,12 @@ class UserCreationReq {
   String ? learningLanguage;
 
   UserCreationReq({
-    required this.firstName,
-    required this.email,
-    required this.lastName,
-    required this.password,
-    required this.goal,
-    required this.dailyGoal,
-    required this.learningLanguage,
+      this.firstName,
+      this.email,
+      this.lastName,
+      this.password,
+      this.goal,
+      this.dailyGoal,
+      this.learningLanguage,
   });
 }

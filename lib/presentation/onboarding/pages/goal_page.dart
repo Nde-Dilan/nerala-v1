@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
+import 'package:other_screens/common/bloc/button/button_state.dart';
+import 'package:other_screens/common/bloc/button/button_state_cubit.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/widgets/custom_button.dart';
+import 'package:other_screens/data/auth/models/user_creation_req.dart';
 import 'package:other_screens/presentation/onboarding/pages/daily_goal_page.dart';
 
+
+Logger _log = Logger('GoalPage.dart');
+
 class GoalsPage extends StatefulWidget {
-  const GoalsPage({super.key});
+  const GoalsPage({super.key, required this.userCreationReq});
+
+  final UserCreationReq userCreationReq;
 
   @override
   State<GoalsPage> createState() => _GoalsPageState();
@@ -14,6 +24,7 @@ class _GoalsPageState extends State<GoalsPage> {
   String? selectedGoal;
 
   void updateSelectedGoal(String goal) {
+    _log.info("Selecting goal $selectedGoal");
     setState(() {
       selectedGoal = goal;
     });
@@ -21,48 +32,62 @@ class _GoalsPageState extends State<GoalsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-            backgroundColor: scaffoldBgColor,
-
-      appBar: AppBar(
-              backgroundColor: scaffoldBgColor,
-
-        leading: BackButton(),
-        title: Text('What is your primary goal?'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Image.asset(
-              "assets/images/goal.png",
-              width: 256,
-              height: 156,
-            ),
-            Expanded(
-              child: Center(
-                child: GoalSelectionScreen(
-                  selectedGoal: selectedGoal,
-                  onGoalSelected: updateSelectedGoal,
+    return BlocProvider(
+      create: (context) => ButtonStateCubit(),
+      child: Scaffold(
+        backgroundColor: scaffoldBgColor,
+        appBar: AppBar(
+          backgroundColor: scaffoldBgColor,
+          leading: BackButton(),
+          title: Text('What is your primary goal?'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: BlocListener<ButtonStateCubit, ButtonState>(
+            listener: (context, state) {
+                if (state is ButtonFailureState) {
+              var snackbar = SnackBar(
+                content: Text(state.errorMessage),
+                behavior: SnackBarBehavior.floating,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            }
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Image.asset(
+                  "assets/images/goal.png",
+                  width: 256,
+                  height: 156,
                 ),
-              ),
+                Expanded(
+                  child: Center(
+                    child: GoalSelectionScreen(
+                      selectedGoal: selectedGoal,
+                      onGoalSelected: updateSelectedGoal,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                CustomButton(
+                  onPressed: selectedGoal == null
+                      ? null // Button is disabled when no goal is selected
+                      : () {
+                             widget.userCreationReq.goal = selectedGoal;
+                        
+                          // Handle navigation or next step
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>   DailyGoalPage(userCreationReq:widget.userCreationReq)));
+                        },
+                  isEnabled: selectedGoal == null,
+                  text: 'NEXT',
+                ),
+              ],
             ),
-            SizedBox(height: 16.0),
-            CustomButton(
-              onPressed: selectedGoal == null
-                  ? null // Button is disabled when no goal is selected
-                  : () {
-                      // Handle navigation or next step
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const DailyGoalPage()));
-                    },
-              isEnabled: selectedGoal == null,
-              text: 'NEXT',
-            ),
-          ],
+          ),
         ),
       ),
     );

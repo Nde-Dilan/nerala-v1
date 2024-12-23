@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/common/loading_builder.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
+import 'package:other_screens/presentation/main/bloc/display_user_info_cubit.dart';
+import 'package:other_screens/presentation/main/bloc/display_user_info_state.dart';
 import 'package:other_screens/presentation/main/methods/pages_method.dart';
 
 // Main HomePage Widget
@@ -123,25 +127,38 @@ class _HomePageState extends State<HomePage> {
       totalWordsLearned: 250,
       totalDaysLearned: 30,
     );
-    return Scaffold(
-      backgroundColor: scaffoldBgColor,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: mediaWidth(context) / 10,
-          ),
-          child: Column(
-            spacing: mediaWidth(context) / 8,
-            children: [
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: mediaWidth(context) / 10),
-                child: buildHeader(mockStats),
-              ),
-              buildCarousel(funFacts),
-              buildCategoriesGrid(categories),
-            ],
-          ),
+    return BlocProvider(
+      create: (context) => UserInfoDisplayCubit()..displayUserInfo(),
+      child: Scaffold(
+        backgroundColor: scaffoldBgColor,
+        body: BlocBuilder<UserInfoDisplayCubit, UserInfoDisplayState>(
+          builder: (context, state) {
+            if (state is UserInfoLoading) {
+              return Center(child: const DefaultLoadingBuilder());
+            }
+            if (state is UserInfoLoaded) {
+              return SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: mediaWidth(context) / 10,
+                  ),
+                  child: Column(
+                    spacing: mediaWidth(context) / 8,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: mediaWidth(context) / 18),
+                        child: buildHeader(mockStats, state.user.firstName),
+                      ),
+                      buildCarousel(funFacts),
+                      buildCategoriesGrid(categories),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Container();
+          },
         ),
       ),
     );

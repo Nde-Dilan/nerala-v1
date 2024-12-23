@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
+import 'package:other_screens/common/bloc/button/button_state_cubit.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/data/auth/models/user_creation_req.dart';
+import 'package:other_screens/domain/auth/usecases/siginup.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
+
+Logger _log = Logger('LanguagePage.dart');
 
 // Data model for language
 class Language {
@@ -94,7 +101,9 @@ class LanguageRepository {
 }
 
 class LanguageSelectionPage extends StatefulWidget {
-  const LanguageSelectionPage({super.key});
+  const LanguageSelectionPage({super.key, required this.userCreationReq});
+
+  final UserCreationReq userCreationReq;
 
   @override
   State<LanguageSelectionPage> createState() => _LanguageSelectionPageState();
@@ -132,67 +141,80 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: scaffoldBgColor,
-      appBar: AppBar(
+    return BlocProvider(
+      create: (context) => ButtonStateCubit(),
+      child: Scaffold(
         backgroundColor: scaffoldBgColor,
-        centerTitle: true,
-        leading: const BackButton(),
-        title: const Text(
-          'Your Language',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
+        appBar: AppBar(
+          backgroundColor: scaffoldBgColor,
+          centerTitle: true,
+          leading: const BackButton(),
+          title: const Text(
+            'Your Language',
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(24.0),
-            child: Text(
-              'What language would you like to learn?',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w300,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text(
+                'What language would you like to learn?',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w300,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              itemCount: LanguageRepository.languages.length,
-              itemBuilder: (context, index) {
-                final language = LanguageRepository.languages[index];
-                return LanguageCard(
-                  language: language,
-                  isSelected: language == _selectedLanguage,
-                  onSelect: () => _selectLanguage(language),
-                  onInfoTap: () => _showLanguageInfo(context, language),
-                );
-              },
+            Expanded(
+              child: ListView.builder(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                itemCount: LanguageRepository.languages.length,
+                itemBuilder: (context, index) {
+                  final language = LanguageRepository.languages[index];
+                  return LanguageCard(
+                    language: language,
+                    isSelected: language == _selectedLanguage,
+                    onSelect: () => _selectLanguage(language),
+                    onInfoTap: () => _showLanguageInfo(context, language),
+                  );
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: NextButton(
-              isEnabled: _selectedLanguage != null,
-              onPressed: () {
-                if (_selectedLanguage != null) {
-                  // Handle navigation to next screen
-                  print("Selected : $_selectedLanguage");
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Builder(builder: (context) {
+                return NextButton(
+                  isEnabled: _selectedLanguage != null,
+                  onPressed: () {
+                    if (_selectedLanguage != null) {
+                      // Handle navigation to next screen
+                      _log.info("Selected : $_selectedLanguage");
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()));
-                }
-              },
+                      widget.userCreationReq.learningLanguage =
+                          _selectedLanguage?.name;
+
+                      _log.info("Creating a user with mail : ${widget.userCreationReq.email}");
+                      context.read<ButtonStateCubit>().execute(
+                          usecase: SignupUseCase(),
+                          params: widget.userCreationReq);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>   HomePage()));
+                    }
+                  },
+                );
+              }),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

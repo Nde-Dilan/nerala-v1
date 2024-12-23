@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:other_screens/common/bloc/button/button_state.dart';
 import 'package:other_screens/common/bloc/button/button_state_cubit.dart';
 import 'package:other_screens/common/constants.dart';
+
+Logger _log = Logger('main.dart');
 
 class CustomButton extends StatelessWidget {
   final bool? isEnabled;
@@ -20,11 +23,12 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ButtonStateCubit, ButtonState>(
         builder: (context, state) {
-      print(state);
-
       if (state is ButtonLoadingState) {
+        _log.info("Button Loading");
         return _loading(context);
       }
+      _log.info("Button Loading state done ");
+
       return _initial(context);
     });
   }

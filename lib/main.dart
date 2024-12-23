@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/src/foundation/constants.dart';
 import 'package:other_screens/common/constants.dart';
 
 import 'package:other_screens/presentation/onboarding/pages/daily_goal_page.dart';
@@ -10,9 +11,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:other_screens/firebase_options.dart';
 import 'package:other_screens/service_locator.dart';
 
+//logging
+import 'package:logging/logging.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -20,11 +22,24 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-   SystemChrome.setEnabledSystemUIMode(
+  if (kDebugMode) {
+    // Log more when in debug mode.
+    Logger.root.level = Level.FINE;
+  }
+
+  // Subscribe to log messages.
+  Logger.root.onRecord.listen((record) {
+    final message = '${record.level.name}: ${record.time}: '
+        '${record.loggerName}: '
+        '${record.message}';
+
+    debugPrint(message);
+  });
+
+  SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top],
   );
-
 
 // Set color of status bar to scaffold bg
   SystemChrome.setSystemUIOverlayStyle(
@@ -43,8 +58,9 @@ void main() async {
   ]).then(
     (_) => runApp(const MyApp()),
   );
-
 }
+
+Logger _log = Logger('main.dart');
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

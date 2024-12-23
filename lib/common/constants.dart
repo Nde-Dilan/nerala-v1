@@ -27,7 +27,7 @@ const Color infoColor = Color(0xFF6424EC);
 
 // Primary color
 MaterialColor seedColorPalette = MaterialColor(
-  seedColor.g as int,
+  seedColor.g.toInt(),
   const <int, Color>{
     50: Color(0xFFE6F9E0),
     100: Color(0xFFCCF3C2),

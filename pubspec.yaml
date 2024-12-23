@@ -45,6 +45,7 @@ dependencies:
   flutter_bloc:
   dartz:
   get_it:
+  logging: ^1.3.0
 
 dev_dependencies:
   flutter_test:

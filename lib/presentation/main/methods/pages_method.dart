@@ -7,14 +7,22 @@ import 'package:other_screens/data/models/main/learning_stats.dart';
 import 'package:other_screens/presentation/congrats/pages/congrats_page.dart';
 import 'package:other_screens/presentation/main/widgets/stats_card.dart';
 
-Widget buildHeader(LearningStats stats) {
+String formatUsername(String username) {
+  if (username.length > 9) {
+    return username.replaceAllMapped(
+        RegExp(r'.{9}'), (match) => '${match.group(0)}\n');
+  }
+  return username;
+}
+
+Widget buildHeader(LearningStats stats, String username) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      const Column(
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Hi,',
             style: TextStyle(
               fontSize: 24,
@@ -22,13 +30,13 @@ Widget buildHeader(LearningStats stats) {
             ),
           ),
           Text(
-            'Dilan',
+            formatUsername(username),
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
+          const Text(
             'Olia ?',
             style: TextStyle(
               fontSize: 20,
