@@ -6,7 +6,9 @@ import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
 import 'package:other_screens/domain/auth/usecases/siginup.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
-
+import 'package:other_screens/presentation/main/pages/progress_page.dart';
+//import 'package:other_screens/presentation/main/pages/dictionary_page.dart';
+//import 'package:other_screens/presentation/main/pages/dictionary_page.dart';
 Logger _log = Logger('LanguagePage.dart');
 
 // Data model for language
@@ -117,6 +119,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
       _selectedLanguage = language;
     });
   }
+  
 
   void _showLanguageInfo(BuildContext context, Language language) {
     showDialog(
@@ -208,6 +211,10 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>   HomePage()));
+                      Navigator.push(
+                          context,
+                           MaterialPageRoute(
+                              builder: (context) => ProgressPage()));          
                     }
                   },
                 );

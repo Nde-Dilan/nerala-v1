@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/constants.dart';
 import 'package:other_screens/common/constants.dart';
 
-import 'package:other_screens/presentation/onboarding/pages/daily_goal_page.dart';
 import 'package:other_screens/presentation/pages/landing_page.dart';
 
 //firebase
