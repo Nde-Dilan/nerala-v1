@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logging/logging.dart';
 import 'package:other_screens/common/helpers/methods/create_username.dart';
 import 'package:other_screens/data/auth/models/user_signin_req.dart';
-
 import '../models/user_creation_req.dart';
 
 Logger _log = Logger('AuthFirebaseImplementation.dart');
@@ -12,10 +11,16 @@ Logger _log = Logger('AuthFirebaseImplementation.dart');
 abstract class AuthFirebaseService {
   Future<Either> signup(UserCreationReq user);
   Future<Either> signin(UserSigninReq user);
-  Future<Either> getAges();
   Future<Either> sendPasswordResetEmail(String email);
   Future<bool> isLoggedIn();
   Future<Either> getUser();
+
+  Future<Either> loginWithGoogle();
+  Future<Either> loginWithFacebook();
+
+  
+  Future<Either> signupWithGoogle();
+  Future<Either> signupWithFacebook();
 }
 
 class AuthFirebaseServiceImpl extends AuthFirebaseService {
@@ -48,17 +53,6 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         message = 'An account already exists with that email.';
       }
       return Left(message);
-    }
-  }
-
-  @override
-  Future<Either> getAges() async {
-    try {
-      var returnedData =
-          await FirebaseFirestore.instance.collection('Ages').get();
-      return Right(returnedData.docs);
-    } catch (e) {
-      return const Left('Please try again');
     }
   }
 
@@ -98,14 +92,12 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
           .collection('users')
           .doc(currentUser?.uid)
           .get()
-          .then(
-            (value) {
-            var data = value.data();
-            data?['userId'] = currentUser?.uid;
-            data?['image'] = currentUser?.photoURL;
-            return data;
-          }
-          );
+          .then((value) {
+        var data = value.data();
+        data?['userId'] = currentUser?.uid;
+        data?['image'] = currentUser?.photoURL;
+        return data;
+      });
       _log.info("Fetching user completed ${userData.toString()}");
       return Right(userData);
     } catch (e) {
@@ -120,6 +112,110 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       return const Right('Password reset email is sent');
     } catch (e) {
       return const Left('Please try again');
+    }
+  }
+
+  @override
+  Future<Either> loginWithGoogle() async {
+    try {
+      final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithPopup(googleProvider);
+
+      _log.info("Google sign in was successful, Here's our data : $userCredential");
+      return  Right("Google sign in was successful");
+    } on FirebaseAuthException catch (e) {
+      String message = 'An error occurred during Google sign in';
+      if (e.code == 'account-exists-with-different-credential') {
+        message = 'An account already exists with a different credential';
+      } else if (e.code == 'invalid-credential') {
+        message = 'The credential received is malformed or has expired';
+      }
+      return Left(message);
+    } catch (e) {
+      return const Left('An unknown error occurred during Google sign in');
+    }
+  }
+
+  @override
+  Future<Either> loginWithFacebook() async {
+    try {
+      final FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithPopup(facebookProvider);
+
+          _log.info("Facebook sign in was successful, Here's our data : $userCredential");
+      return  Right("Facebook sign in was successful");
+    } on FirebaseAuthException catch (e) {
+      String message = 'An error occurred during Facebook sign in';
+      if (e.code == 'account-exists-with-different-credential') {
+        message = 'An account already exists with a different credential';
+      } else if (e.code == 'invalid-credential') {
+        message = 'The credential received is malformed or has expired';
+      }
+      return Left(message);
+    } catch (e) {
+      return const Left('An unknown error occurred during Facebook sign in');
+    }
+  }
+
+   @override
+  Future<Either> signupWithGoogle() async {
+    try {
+      final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithPopup(googleProvider);
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'firstName': userCredential.user!.displayName,
+        'lastName': userCredential.user!.displayName,
+        'email': userCredential.user!.email,
+        'userId': userCredential.user!.uid,
+      });
+
+      return const Right('Google sign up was successful');
+    } on FirebaseAuthException catch (e) {
+      String message = 'An error occurred during Google sign up';
+      if (e.code == 'account-exists-with-different-credential') {
+        message = 'An account already exists with a different credential';
+      } else if (e.code == 'invalid-credential') {
+        message = 'The credential received is malformed or has expired';
+      }
+      return Left(message);
+    } catch (e) {
+      return const Left('An unknown error occurred during Google sign up');
+    }
+  }
+
+  @override
+  Future<Either> signupWithFacebook() async {
+    try {
+      final FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithPopup(facebookProvider);
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'firstName': userCredential.user!.displayName,
+        'lastName': userCredential.user!.displayName,
+        'email': userCredential.user!.email,
+        'userId': userCredential.user!.uid,
+      });
+
+      return const Right('Facebook sign up was successful');
+    } on FirebaseAuthException catch (e) {
+      String message = 'An error occurred during Facebook sign up';
+      if (e.code == 'account-exists-with-different-credential') {
+        message = 'An account already exists with a different credential';
+      } else if (e.code == 'invalid-credential') {
+        message = 'The credential received is malformed or has expired';
+      }
+      return Left(message);
+    } catch (e) {
+      return const Left('An unknown error occurred during Facebook sign up');
     }
   }
 }

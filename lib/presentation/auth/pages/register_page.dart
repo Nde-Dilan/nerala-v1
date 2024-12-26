@@ -239,7 +239,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        
+                      },
                       child: Image.asset("assets/icons/facebook.png"),
                     ),
                     GestureDetector(

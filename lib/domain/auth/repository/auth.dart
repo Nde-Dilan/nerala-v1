@@ -4,10 +4,14 @@ import 'package:other_screens/data/auth/models/user_signin_req.dart';
 
 abstract class AuthRepository {
   Future<Either> signup(UserCreationReq user);
-    Future<Either> signin(UserSigninReq user);
+  Future<Either> signin(UserSigninReq user);
 
-  Future<Either> getAges();
+  Future<Either> loginWithGoogle();
+  Future<Either> loginWithFacebook();
 
-    Future<bool> isLoggedIn();
+  Future<Either> signupWithGoogle();
+  Future<Either> signupWithFacebook();
+
+  Future<bool> isLoggedIn();
   Future<Either> getUser();
 }

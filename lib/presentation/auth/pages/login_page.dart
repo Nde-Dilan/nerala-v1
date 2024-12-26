@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -7,6 +8,7 @@ import 'package:other_screens/common/widgets/custom_button.dart';
 import 'package:other_screens/common/widgets/forms/password_text_formfield.dart';
 import 'package:other_screens/common/widgets/forms/simple_text_formfield.dart';
 import 'package:other_screens/data/auth/models/user_signin_req.dart';
+import 'package:other_screens/data/auth/repository/auth_repository_impl.dart';
 import 'package:other_screens/domain/auth/usecases/signin.dart';
 import 'package:other_screens/presentation/auth/pages/register_page.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
@@ -139,6 +141,13 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  CupertinoCheckbox(
+                      value: doRememberYou,
+                      onChanged: (value) {
+                        setState(() {
+                          doRememberYou = !doRememberYou;
+                        });
+                      }),
                   Checkbox(
                       value: doRememberYou,
                       onChanged: (value) {
@@ -213,11 +222,16 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      
+                    },
                     child: Image.asset("assets/icons/facebook.png"),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      AuthRepositoryImpl authRepositoryImpl = AuthRepositoryImpl();
+                      authRepositoryImpl.loginWithGoogle();
+                    },
                     child: Image.asset("assets/icons/google.png"),
                   )
                 ],

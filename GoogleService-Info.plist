@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1095875882185-97qd3o84rd96vstd1k6ldv6m2u34uqnq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1095875882185-97qd3o84rd96vstd1k6ldv6m2u34uqnq</string>
+	<key>API_KEY</key>
+	<string>AIzaSyABemJp9JXrxyODTHH0bufYk4ufuU66YcM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1095875882185</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.otherScreens</string>
+	<key>PROJECT_ID</key>
+	<string>nerala-v1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>nerala-v1.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1095875882185:ios:331654bdfbb2b3cb3d7118</string>
+</dict>
+</plist>

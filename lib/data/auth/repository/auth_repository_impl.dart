@@ -11,16 +11,31 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Either> signup(UserCreationReq user) async {
     return await sl<AuthFirebaseService>().signup(user);
   }
+   @override
+  Future<Either> loginWithGoogle() async {
+    return await sl<AuthFirebaseService>().loginWithGoogle();
+  }
+
+   @override
+  Future<Either> loginWithFacebook() async {
+    return await sl<AuthFirebaseService>().loginWithFacebook();
+  }
+   @override
+  Future<Either> signupWithGoogle() async {
+    return await sl<AuthFirebaseService>().signupWithGoogle();
+  }
+
+   @override
+  Future<Either> signupWithFacebook() async {
+    return await sl<AuthFirebaseService>().signupWithFacebook();
+  }
 
     @override
   Future<Either> signin(UserSigninReq user) async {
      return await sl<AuthFirebaseService>().signin(user);
   }
 
-  @override
-  Future<Either> getAges() async {
-    return await sl<AuthFirebaseService>().getAges();
-  }
+   
   
    @override
   Future<bool> isLoggedIn() async {
