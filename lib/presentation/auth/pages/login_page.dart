@@ -223,13 +223,16 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      
+                      AuthRepositoryImpl authRepositoryImpl =
+                          AuthRepositoryImpl();
+                      authRepositoryImpl.loginWithFacebook();
                     },
                     child: Image.asset("assets/icons/facebook.png"),
                   ),
                   GestureDetector(
                     onTap: () {
-                      AuthRepositoryImpl authRepositoryImpl = AuthRepositoryImpl();
+                      AuthRepositoryImpl authRepositoryImpl =
+                          AuthRepositoryImpl();
                       authRepositoryImpl.loginWithGoogle();
                     },
                     child: Image.asset("assets/icons/google.png"),

@@ -2,7 +2,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.nerala.app"
-        x,lns:tools="http://schema.android.com/tools"
+        xmlns:tools="http://schema.android.com/tools"
 >
     
               
