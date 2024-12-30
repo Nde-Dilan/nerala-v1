@@ -12,8 +12,8 @@ import 'package:other_screens/common/widgets/forms/simple_text_formfield.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
 import 'package:other_screens/domain/auth/usecases/siginup.dart';
 import 'package:other_screens/presentation/auth/pages/login_page.dart';
+import 'package:other_screens/presentation/auth/utils/auth_methods.dart';
 import 'package:other_screens/presentation/onboarding/pages/goal_page.dart';
-
 
 Logger _log = Logger('RegistrationPage.dart');
 
@@ -183,7 +183,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: CustomButton(
                     onPressed: (isEmailFilled &&
                             isPasswordFilled &&
-                            isConfirmPasswordFilled && _passwordController.text == _confirmPasswordController.text )
+                            isConfirmPasswordFilled &&
+                            _passwordController.text ==
+                                _confirmPasswordController.text)
                         ? () {
                             if (_registerFormKey.currentState!.validate()) {
                               // Save and proceed
@@ -193,8 +195,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               UserCreationReq userCreationReq =
                                   UserCreationReq();
 
-                              userCreationReq.firstName = generateUsernameFromEmail(_emailController.text);
-                              userCreationReq.lastName = generateUsernameFromEmail(_emailController.text);
+                              userCreationReq.firstName =
+                                  generateUsernameFromEmail(
+                                      _emailController.text);
+                              userCreationReq.lastName =
+                                  generateUsernameFromEmail(
+                                      _emailController.text);
                               userCreationReq.email = _emailController.text;
                               userCreationReq.password =
                                   _passwordController.text;
@@ -240,7 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        
+                        showGoogleSignInDialog(context);
                       },
                       child: Image.asset("assets/icons/facebook.png"),
                     ),

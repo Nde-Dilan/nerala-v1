@@ -1,8 +1,7 @@
 
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.nerala.app"
-        xmlns:tools="http://schema.android.com/tools"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+        xmlns:tools="http://schemas.android.com/tools"
 >
     
               

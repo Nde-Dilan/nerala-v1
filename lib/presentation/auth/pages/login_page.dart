@@ -11,6 +11,7 @@ import 'package:other_screens/data/auth/models/user_signin_req.dart';
 import 'package:other_screens/data/auth/repository/auth_repository_impl.dart';
 import 'package:other_screens/domain/auth/usecases/signin.dart';
 import 'package:other_screens/presentation/auth/pages/register_page.dart';
+import 'package:other_screens/presentation/auth/utils/auth_methods.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -223,9 +224,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      AuthRepositoryImpl authRepositoryImpl =
-                          AuthRepositoryImpl();
-                      authRepositoryImpl.loginWithFacebook();
+                      showGoogleSignInDialog(context);
                     },
                     child: Image.asset("assets/icons/facebook.png"),
                   ),
