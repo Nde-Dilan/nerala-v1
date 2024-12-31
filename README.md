@@ -30,10 +30,9 @@ Nerala is a mobile application dedicated to preserving and revitalizing Cameroon
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="https://via.placeholder.com/200x400?text=Login+Screen" alt="Login Screen" width="200"/>
-  <img src="https://via.placeholder.com/200x400?text=Home+Dashboard" alt="Patient Dashboard" width="200"/>
-  <img src="https://via.placeholder.com/200x400?text=Word+Learning" alt="Doctor Portal" width="200"/>
-  <img src="https://via.placeholder.com/200x400?text=Settings" alt="Appointments" width="200"/> 
+  <img src="/images/onoarding.png" alt="Onboarding Screen" width="200"/>
+  <img src="/images/register.png" alt="Registration Page" width="200"/>
+  <img src="/images/goal.png" alt="Goal selection" width="200"/> 
 </div>
 
 ## 🚀 Getting Started
