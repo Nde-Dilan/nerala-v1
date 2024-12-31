@@ -40,7 +40,7 @@ Nerala is a mobile application dedicated to preserving and revitalizing Cameroon
 
 ### Prerequisites
 
-- Flutter (3.x or later)
+- Flutter (3.27 or later)
 - Dart SDK
 - Android Studio / VS Code
 - Git
@@ -49,7 +49,7 @@ Nerala is a mobile application dedicated to preserving and revitalizing Cameroon
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/nerala-app.git
+git clone https://github.com/Nde-Dilan/nerala-app.git
 
 # Navigate to the project directory
 cd nerala-app
@@ -81,12 +81,6 @@ We welcome contributions to Nerala! Please follow these steps:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 👥 Team
-
-- **NDE HURICH DILAN** - CEO and Project Manager
-- **TIMA CHEGUEM CLAUDE** - Chief Financial Officer (CFO)
-- **NGATCHANGUE SIEWE NEL** - Chief Operation Officer (COO)
-- **FOGANG MENYE BACHYR** - Software and UX/UI Designer
 
 ## 💼 Business Model
 
