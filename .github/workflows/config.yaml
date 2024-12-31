@@ -35,10 +35,39 @@ jobs:
       - run: flutter pub get
       - run: flutter build apk --release --split-per-abi
 
+      # Step to fetch existing tags
+      - name: Fetch tags
+        run: git fetch --tags
+
+      # Step to determine and increment the tag
+      - name: Generate new tag
+        id: generate_tag
+        run: |
+          # Get the latest tag matching the pattern
+          latest_tag=$(git tag --list "v1-0.0.*" | sort -V | tail -n 1)
+          echo "Latest tag: $latest_tag"
+          if [ -z "$latest_tag" ]; then
+            # Default to v1-0.0.0 if no tags are found
+            new_tag="v1-0.0.0"
+          else
+            # Extract the numeric part and increment it
+            base="v1-0.0."
+            current_number=${latest_tag#$base}
+            new_number=$((current_number + 1))
+            new_tag="${base}${new_number}"
+          fi
+          echo "New tag: $new_tag"
+          echo "tag=$new_tag" >> $GITHUB_ENV
+
+      # Step to push the tag
+      - name: Push new tag
+        run: |
+          git tag ${{ env.tag }}
+          git push origin ${{ env.tag }}
+
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          # artifacts: "build/app/outputs/apk/release/*"
           artifacts: "build/app/outputs/flutter-apk/*"
-          tag: ${{ github.ref_name }}
+          tag: ${{ env.tag }}
           token: ${{ secrets.TOKEN }}
