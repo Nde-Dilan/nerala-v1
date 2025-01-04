@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:other_screens/common/constants.dart';
@@ -5,6 +6,8 @@ import 'package:other_screens/common/loading_builder.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
+import 'package:other_screens/presentation/auth/pages/login_page.dart';
+import 'package:other_screens/presentation/dictionary/pages/dictionary.dart';
 import 'package:other_screens/presentation/main/bloc/display_user_info_cubit.dart';
 import 'package:other_screens/presentation/main/bloc/display_user_info_state.dart';
 import 'package:other_screens/presentation/main/methods/pages_method.dart';
@@ -17,7 +20,45 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  int currentPage = 0;
+  final double tabBarHeight = 88.0;
+
+  final List<Widget> _kTabPages = [
+    const HomePage(),
+    const DictionaryPage(),
+    const LoginPage(),
+  ];
+
+  final List<IconData> tabIcons = [
+    Icons.home,
+    Icons.person,
+    Icons.settings,
+  ];
+
+  final List<String> tabNames = [
+    'Home',
+    'Profile',
+    'Settings',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: _kTabPages.length,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   final List<Category> categories = [
     Category(
       title: 'Family',
@@ -159,6 +200,54 @@ class _HomePageState extends State<HomePage> {
             }
             return Container();
           },
+        ),
+        bottomNavigationBar: PreferredSize(
+          preferredSize: Size.fromHeight(88.0),
+          child: UnconstrainedBox(
+            child: Container(
+              height: tabBarHeight,
+              constraints: BoxConstraints(
+                maxWidth: mediaWidth(context) - 50.0,
+              ),
+              margin: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 16.0),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    blurRadius: 8.0,
+                    offset: Offset(0, 4.0),
+                  ),
+                ],
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
+                child: TabBar(
+                  controller: _tabController,
+                  isScrollable: true,
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  
+                  indicatorPadding: EdgeInsets.zero,
+                  onTap: (index) {
+                    setState(() {
+                      currentPage = index;
+                    });
+                  },
+                  tabs: List.generate(
+                    _kTabPages.length,
+                    (index) => Tab(
+                      icon: Icon(tabIcons[index]),
+                      text: tabNames[index],
+                    ),
+                  ),
+                  dividerHeight: 0.0,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

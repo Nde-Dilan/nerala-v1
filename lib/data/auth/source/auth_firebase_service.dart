@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logging/logging.dart';
@@ -18,7 +21,6 @@ abstract class AuthFirebaseService {
   Future<Either> loginWithGoogle();
   Future<Either> loginWithFacebook();
 
-  
   Future<Either> signupWithGoogle();
   Future<Either> signupWithFacebook();
 }
@@ -70,6 +72,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       } else if (e.code == 'invalid-credential') {
         message = 'Wrong password provided for this user';
       }
+      _log.info("Error message from source: $message");
 
       return Left(message);
     }
@@ -87,6 +90,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
   @override
   Future<Either> getUser() async {
     try {
+      Future.delayed(Duration(seconds: 3000));
       var currentUser = FirebaseAuth.instance.currentUser;
       var userData = await FirebaseFirestore.instance
           .collection('users')
@@ -118,12 +122,30 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
   @override
   Future<Either> loginWithGoogle() async {
     try {
-      final GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      // Initialize Google Sign In
+      final GoogleSignIn googleSignIn = GoogleSignIn();
 
-      _log.info("Google sign in was successful, Here's our data : $userCredential");
-      return  Right("Google sign in was successful");
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      // If user cancels the sign in
+      if (googleUser == null) {
+        return const Left('Google sign in was cancelled');
+      }
+
+      // Obtain auth details
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create credential
+      final userCredential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      _log.info(
+          "Google sign in was successful, Here's our data : $userCredential");
+      return Right("Google sign in was successful");
     } on FirebaseAuthException catch (e) {
       String message = 'An error occurred during Google sign in';
       if (e.code == 'account-exists-with-different-credential') {
@@ -140,12 +162,24 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
   @override
   Future<Either> loginWithFacebook() async {
     try {
-      final FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithPopup(facebookProvider);
+      // Initialize Facebook Login
+      final LoginResult result = await FacebookAuth.instance.login();
 
-          _log.info("Facebook sign in was successful, Here's our data : $userCredential");
-      return  Right("Facebook sign in was successful");
+      if (result.status != LoginStatus.success) {
+        return Left(result.message ?? 'Facebook sign in was cancelled');
+      }
+
+      // Create Firebase credential
+      final OAuthCredential credential =
+          FacebookAuthProvider.credential(result.accessToken!.tokenString);
+
+      // Sign in with Firebase
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      _log.info("Facebook login successful: ${userCredential.user!.email}");
+
+      return Right("Facebook sign in was successful");
     } on FirebaseAuthException catch (e) {
       String message = 'An error occurred during Facebook sign in';
       if (e.code == 'account-exists-with-different-credential') {
@@ -159,11 +193,32 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
     }
   }
 
-   @override
+  @override
   Future<Either> signupWithGoogle() async {
     try {
-      final GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      // Initialize Google Sign In
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+
+      // Start sign in flow
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        return const Left('Google sign up was cancelled');
+      }
+
+      // Get auth details
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create Firebase credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -174,8 +229,9 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         'email': userCredential.user!.email,
         'userId': userCredential.user!.uid,
       });
+      _log.info("'Google sign up was successful'");
 
-      return const Right('Google sign up was successful');
+      return Right(userCredential);
     } on FirebaseAuthException catch (e) {
       String message = 'An error occurred during Google sign up';
       if (e.code == 'account-exists-with-different-credential') {
@@ -185,15 +241,29 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       }
       return Left(message);
     } catch (e) {
-      return const Left('An unknown error occurred during Google sign up');
+      return Left('An unknown error occurred during Google sign up $e');
     }
   }
 
   @override
   Future<Either> signupWithFacebook() async {
     try {
-      final FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithPopup(facebookProvider);
+      // Initialize Facebook Login
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status != LoginStatus.success) {
+        return Left(result.message ?? 'Facebook sign in was cancelled');
+      }
+
+      // Create Firebase credential
+      final OAuthCredential credential =
+          FacebookAuthProvider.credential(result.accessToken!.tokenString);
+
+      // Sign in with Firebase
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Create/Update user document
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -204,6 +274,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         'email': userCredential.user!.email,
         'userId': userCredential.user!.uid,
       });
+      _log.info("Facebook login successful: ${userCredential.user!.email}");
 
       return const Right('Facebook sign up was successful');
     } on FirebaseAuthException catch (e) {
@@ -215,7 +286,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       }
       return Left(message);
     } catch (e) {
-      return const Left('An unknown error occurred during Facebook sign up');
+      return Left('An unknown error occurred during Facebook sign up: $e');
     }
   }
 }

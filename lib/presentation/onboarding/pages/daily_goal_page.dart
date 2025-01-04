@@ -6,7 +6,6 @@ import 'package:other_screens/common/bloc/button/button_state_cubit.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/widgets/custom_button.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
-import 'package:other_screens/domain/auth/usecases/siginup.dart';
 import 'package:other_screens/presentation/onboarding/pages/language_selection_page.dart';
 
 Logger _log = Logger('DailyGoal.dart');

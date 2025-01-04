@@ -4,7 +4,7 @@ import 'package:other_screens/presentation/dictionary/widgets/category_page.dart
 import '../widgets/dictionary_card.dart';
 
 class DictionaryPage extends StatefulWidget {
-  const DictionaryPage({Key? key}) : super(key: key);
+  const DictionaryPage({super.key});
 
   @override
   State<DictionaryPage> createState() => _DictionaryPageState();

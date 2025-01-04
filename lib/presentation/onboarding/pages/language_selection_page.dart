@@ -1,8 +1,12 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
+import 'package:other_screens/common/bloc/button/button_state.dart';
 import 'package:other_screens/common/bloc/button/button_state_cubit.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/common/loading_builder.dart';
+import 'package:other_screens/common/widgets/dialogs/erro_dialog.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
 import 'package:other_screens/domain/auth/usecases/siginup.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
@@ -143,78 +147,107 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ButtonStateCubit(),
-      child: Scaffold(
-        backgroundColor: scaffoldBgColor,
-        appBar: AppBar(
-          backgroundColor: scaffoldBgColor,
-          centerTitle: true,
-          leading: const BackButton(),
-          title: const Text(
-            'Your Language',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Text(
-                'What language would you like to learn?',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w300,
+      child: BlocConsumer<ButtonStateCubit, ButtonState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Stack(children: [
+            if (state is ButtonLoadingState)
+              Container(
+                color: Colors.black.withAlpha(128),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: Center(
+                    child: DefaultLoadingBuilder(),
+                  ),
                 ),
-                textAlign: TextAlign.center,
+              ),
+            Scaffold(
+              backgroundColor: scaffoldBgColor,
+              appBar: AppBar(
+                backgroundColor: scaffoldBgColor,
+                centerTitle: true,
+                leading: const BackButton(),
+                title: const Text(
+                  'Your Language',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(24.0),
+                    child: Text(
+                      'What language would you like to learn?',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      itemCount: LanguageRepository.languages.length,
+                      itemBuilder: (context, index) {
+                        final language = LanguageRepository.languages[index];
+                        return LanguageCard(
+                          language: language,
+                          isSelected: language == _selectedLanguage,
+                          onSelect: () => _selectLanguage(language),
+                          onInfoTap: () => _showLanguageInfo(context, language),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Builder(builder: (context) {
+                      return BlocListener<ButtonStateCubit, ButtonState>(
+                        listener: (context, state) {
+                          if (state is ButtonLoadingState) {
+                            DefaultLoadingBuilder();
+                          } else if (state is ButtonFailureState) {
+                            showErrorDialog(
+                                context, "Sign Up Error", state.errorMessage);
+                          } else if (state is ButtonSuccessState) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()));
+                          }
+                        },
+                        child: NextButton(
+                          isEnabled: _selectedLanguage != null,
+                          onPressed: () {
+                            if (_selectedLanguage != null) {
+                              // Handle navigation to next screen
+                              _log.info("Selected : $_selectedLanguage");
+
+                              widget.userCreationReq.learningLanguage =
+                                  _selectedLanguage?.name;
+
+                              _log.info(
+                                  "Creating a user with mail : ${widget.userCreationReq.email}");
+                              context.read<ButtonStateCubit>().execute(
+                                  usecase: SignupUseCase(),
+                                  params: widget.userCreationReq);
+                            }
+                          },
+                        ),
+                      );
+                    }),
+                  ),
+                ],
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                itemCount: LanguageRepository.languages.length,
-                itemBuilder: (context, index) {
-                  final language = LanguageRepository.languages[index];
-                  return LanguageCard(
-                    language: language,
-                    isSelected: language == _selectedLanguage,
-                    onSelect: () => _selectLanguage(language),
-                    onInfoTap: () => _showLanguageInfo(context, language),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Builder(builder: (context) {
-                return NextButton(
-                  isEnabled: _selectedLanguage != null,
-                  onPressed: () {
-                    if (_selectedLanguage != null) {
-                      // Handle navigation to next screen
-                      _log.info("Selected : $_selectedLanguage");
-
-                      widget.userCreationReq.learningLanguage =
-                          _selectedLanguage?.name;
-
-                      _log.info("Creating a user with mail : ${widget.userCreationReq.email}");
-                      context.read<ButtonStateCubit>().execute(
-                          usecase: SignupUseCase(),
-                          params: widget.userCreationReq);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>   HomePage()));
-                    }
-                  },
-                );
-              }),
-            ),
-          ],
-        ),
+          ]);
+        },
       ),
     );
   }

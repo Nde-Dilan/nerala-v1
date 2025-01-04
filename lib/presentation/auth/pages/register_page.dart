@@ -10,9 +10,12 @@ import 'package:other_screens/common/widgets/custom_button.dart';
 import 'package:other_screens/common/widgets/forms/password_text_formfield.dart';
 import 'package:other_screens/common/widgets/forms/simple_text_formfield.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
-import 'package:other_screens/domain/auth/usecases/siginup.dart';
+import 'package:other_screens/domain/auth/usecases/facebook_register.dart';
+import 'package:other_screens/domain/auth/usecases/google_register.dart';
+import 'package:other_screens/domain/auth/usecases/no_params.dart';
 import 'package:other_screens/presentation/auth/pages/login_page.dart';
 import 'package:other_screens/presentation/auth/utils/auth_methods.dart';
+import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:other_screens/presentation/onboarding/pages/goal_page.dart';
 
 Logger _log = Logger('RegistrationPage.dart');
@@ -103,6 +106,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 behavior: SnackBarBehavior.floating,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              _log.info(
+                  "Error while trying to use google auth: ${state.errorMessage}");
+            } else if (state is ButtonSuccessState) {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
             }
           },
           child: Center(
@@ -151,12 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         hintText: "Password",
                         prefixIcon: Icon(HugeIcons.strokeRoundedLockPassword),
                         onChanged: (value) => password = value,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Password is required";
-                          }
-                          return null;
-                        },
+                        validator: validatePassword,
                       ),
                       SizedBox(height: 16.0),
                       PasswordTextFormField(
@@ -167,6 +170,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Confirm password is required";
+                          }
+                          if (value != _passwordController.text) {
+                            return "Passwords do not match";
                           }
                           return null;
                         },
@@ -244,16 +250,32 @@ class _RegisterPageState extends State<RegisterPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        showGoogleSignInDialog(context);
-                      },
-                      child: Image.asset("assets/icons/facebook.png"),
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Image.asset("assets/icons/google.png"),
-                    )
+                    Builder(builder: (context) {
+                      return GestureDetector(
+                        onTap: () {
+                          //  context.read<ButtonStateCubit>().execute(
+                          //     usecase: SignupWithFacebookUseCase(),
+                          //     params: NoParams());
+                          showGoogleSignInDialog(context);
+                        },
+                        child: Image.asset("assets/icons/facebook.png"),
+                      );
+                    }),
+                    Builder(builder: (context) {
+                      return BlocListener<ButtonStateCubit, ButtonState>(
+                        listener: (context, state) {
+                          // TODO: implement listener
+                        },
+                        child: GestureDetector(
+                          onTap: () {
+                            context.read<ButtonStateCubit>().execute(
+                                usecase: SignupWithGoogleUseCase(),
+                                params: NoParams());
+                          },
+                          child: Image.asset("assets/icons/google.png"),
+                        ),
+                      );
+                    })
                   ],
                 )
               ],
