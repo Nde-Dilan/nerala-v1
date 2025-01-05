@@ -1,10 +1,47 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/data/music/source/audio_service.dart';
 import 'package:other_screens/presentation/auth/pages/login_page.dart';
 import 'package:other_screens/presentation/auth/pages/register_page.dart';
 
-class LandingPage extends StatelessWidget {
-  const LandingPage({super.key});
+class LandingPage extends StatefulWidget {
+  LandingPage({super.key});
+
+  @override
+  State<LandingPage> createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
+  late AudioService _audioService;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioService = AudioService();
+    _initAudioAsync();
+  }
+
+  Future<void> _initAudioAsync() async {
+    try {
+      // Ensure initialization happens on main thread
+      WidgetsFlutterBinding.ensureInitialized();
+
+      // Initialize audio in background
+      Future.microtask(() async {
+        await _audioService.initialize();
+        await _audioService.play();
+      });
+    } catch (e) {
+      debugPrint('Audio initialization error: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _audioService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +111,6 @@ class LandingPage extends StatelessWidget {
     );
   }
 }
- 
 
 class NextButton extends StatelessWidget {
   final bool? isEnabled;

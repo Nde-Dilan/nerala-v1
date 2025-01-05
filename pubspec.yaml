@@ -50,6 +50,7 @@ dependencies:
   google_sign_in: ^6.2.2
   flutter_launcher_icons: ^0.14.2
   pie_menu: ^3.2.7
+  just_audio: ^0.9.42
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,7 @@ flutter:
     - assets/icons/
     - assets/icons/category/
     - assets/icons/words/
+    - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

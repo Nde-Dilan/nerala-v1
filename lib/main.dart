@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/constants.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/data/music/source/audio_service.dart';
 
 import 'package:other_screens/presentation/pages/landing_page.dart';
 
@@ -16,39 +17,42 @@ import 'package:logging/logging.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await initializeDependencies();
+  try {
+    // Firebase initialization first
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+    );
+    
+    // Dependencies next
+    await initializeDependencies();
 
-  WidgetsFlutterBinding.ensureInitialized();
+    
 
-  if (kDebugMode) {
-    // Log more when in debug mode.
-    Logger.root.level = Level.FINE;
-  }
+    // Configure logging
+    if (kDebugMode) {
+      Logger.root.level = Level.FINE;
+    }
 
-  // Subscribe to log messages.
-  Logger.root.onRecord.listen((record) {
-    final message = '${record.level.name}: ${record.time}: '
-        '${record.loggerName}: '
-        '${record.message}';
+    Logger.root.onRecord.listen((record) {
+      debugPrint('${record.level.name}: ${record.time}: ${record.message}');
+    });
 
-    debugPrint(message);
-  });
+    // System UI configuration
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top],
+    );
 
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.manual,
-    overlays: [SystemUiOverlay.top],
-  );
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: systemChrome.withAlpha(0),
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: systemChrome,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
 
-// Set color of status bar to scaffold bg
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      statusBarColor: systemChrome.withAlpha(0),
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: systemChrome,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ),
-  );
+  
 
   // Lock device orientation to portrait
   SystemChrome.setPreferredOrientations([
@@ -57,13 +61,48 @@ void main() async {
   ]).then(
     (_) => runApp(const MyApp()),
   );
+  
+
+
+  }catch(e){
+     debugPrint('Initialization error: $e');
+ 
+  }
 }
 
 Logger _log = Logger('main.dart');
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+   final AudioService _audioService = AudioService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _audioService.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _audioService.pause();
+    } else if (state == AppLifecycleState.resumed) {
+      _audioService.play();
+    }
+  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
