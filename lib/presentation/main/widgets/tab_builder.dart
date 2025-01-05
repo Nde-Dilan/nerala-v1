@@ -6,7 +6,7 @@ class TabBuilder extends StatelessWidget {
   final IconData icon;
   final String title;
 
-  const TabBuilder({
+  const TabBuilder({super.key, 
     required this.index,
     required this.currentIndex,
     required this.icon,

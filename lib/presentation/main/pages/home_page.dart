@@ -24,23 +24,29 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int currentPage = 0;
-  final double tabBarHeight = 88.0;
+  final double tabBarHeight = 55;
 
   final List<Widget> _kTabPages = [
     const HomePage(),
+    const HomePage(),
     const DictionaryPage(),
+    const LoginPage(),
     const LoginPage(),
   ];
 
   final List<IconData> tabIcons = [
+    Icons.person,
     Icons.home,
     Icons.person,
+    Icons.settings,
     Icons.settings,
   ];
 
   final List<String> tabNames = [
+    'Profile',
     'Home',
     'Profile',
+    'Settings',
     'Settings',
   ];
 
@@ -202,7 +208,7 @@ class _HomePageState extends State<HomePage>
           },
         ),
         bottomNavigationBar: PreferredSize(
-          preferredSize: Size.fromHeight(88.0),
+          preferredSize: Size.fromHeight(55),
           child: UnconstrainedBox(
             child: Container(
               height: tabBarHeight,
@@ -212,14 +218,14 @@ class _HomePageState extends State<HomePage>
               margin: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 16.0),
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.7),
+                color: const Color(0xff86f16a),
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
+                    color: seedColor,
                     blurRadius: 8.0,
                     offset: Offset(0, 4.0),
-                  ),
+                  ), 
                 ],
               ),
               child: BackdropFilter(
@@ -229,7 +235,6 @@ class _HomePageState extends State<HomePage>
                   isScrollable: true,
                   physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.zero,
-                  
                   indicatorPadding: EdgeInsets.zero,
                   onTap: (index) {
                     setState(() {
