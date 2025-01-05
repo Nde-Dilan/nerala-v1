@@ -13,6 +13,8 @@ import 'package:other_screens/common/widgets/forms/password_text_formfield.dart'
 import 'package:other_screens/common/widgets/forms/simple_text_formfield.dart';
 import 'package:other_screens/data/auth/models/user_signin_req.dart';
 import 'package:other_screens/data/auth/repository/auth_repository_impl.dart';
+import 'package:other_screens/domain/auth/usecases/google_login.dart';
+import 'package:other_screens/domain/auth/usecases/no_params.dart';
 import 'package:other_screens/domain/auth/usecases/signin.dart';
 import 'package:other_screens/presentation/auth/pages/register_page.dart';
 import 'package:other_screens/presentation/auth/utils/auth_methods.dart';
@@ -251,24 +253,42 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        showGoogleSignInDialog(context);
-                      },
-                      child: Image.asset("assets/icons/facebook.png"),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        AuthRepositoryImpl authRepositoryImpl =
-                            AuthRepositoryImpl();
-                        authRepositoryImpl.loginWithGoogle();
-                      },
-                      child: Image.asset("assets/icons/google.png"),
-                    )
-                  ],
+                BlocListener<ButtonStateCubit, ButtonState>(
+                  listener: (context, state) {
+                    if (state is ButtonFailureState) {
+                      var snackbar = SnackBar(
+                        content: Text(state.errorMessage),
+                        behavior: SnackBarBehavior.floating,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                      _log.info(
+                          "Error while trying to use google auth: ${state.errorMessage}");
+                    } else if (state is ButtonSuccessState) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
+                    }
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showGoogleSignInDialog(context);
+                        },
+                        child: Image.asset("assets/icons/facebook.png"),
+                      ),
+                      Builder(builder: (context) {
+                        return GestureDetector(
+                          onTap: () {
+                            context.read<ButtonStateCubit>().execute(
+                                usecase: LoginWithGoogleUseCase(),
+                                params: NoParams());
+                          },
+                          child: Image.asset("assets/icons/google.png"),
+                        );
+                      })
+                    ],
+                  ),
                 )
               ],
             ),

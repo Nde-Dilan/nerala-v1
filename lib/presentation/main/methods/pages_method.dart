@@ -1,13 +1,21 @@
 import "package:carousel_slider/carousel_slider.dart";
 
 import 'package:flutter/material.dart';
+import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
 import 'package:other_screens/presentation/congrats/pages/congrats_page.dart';
+import 'package:other_screens/presentation/main/widgets/countdown_timer.dart';
 import 'package:other_screens/presentation/main/widgets/stats_card.dart';
 
 String formatUsername(String username) {
+  if (username.isEmpty) return '';
+
+  // Check for spaces and return first word if found
+  if (username.contains(' ')) {
+    return username.split(' ')[0];
+  }
   if (username.length > 9) {
     return username.replaceAllMapped(
         RegExp(r'.{9}'), (match) => '${match.group(0)}\n');
@@ -22,6 +30,7 @@ Widget buildHeader(LearningStats stats, String username) {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // CountdownTimer(),
           const Text(
             'Hi,',
             style: TextStyle(
@@ -32,9 +41,7 @@ Widget buildHeader(LearningStats stats, String username) {
           Text(
             formatUsername(username),
             style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+                fontSize: 28, fontWeight: FontWeight.bold, color: seedColor),
           ),
           const Text(
             'Olia ?',
@@ -69,7 +76,7 @@ Widget buildCarouselItem(FunFact funFact) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 8.0),
     decoration: BoxDecoration(
-      color: Colors.blue.shade100,
+      color: seedColorPalette.shade100,
       borderRadius: BorderRadius.circular(16),
     ),
     child: Column(
@@ -83,7 +90,7 @@ Widget buildCarouselItem(FunFact funFact) {
         Text(
           funFact.description,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 16),
+          style: AppTextStyles.body,
         ),
       ],
     ),

@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/loading_builder.dart';
+import 'package:other_screens/data/main/mock_data.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
@@ -24,10 +26,9 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int currentPage = 0;
-  final double tabBarHeight = 55;
+  final double tabBarHeight = 50;
 
   final List<Widget> _kTabPages = [
-    const HomePage(),
     const HomePage(),
     const DictionaryPage(),
     const LoginPage(),
@@ -35,19 +36,17 @@ class _HomePageState extends State<HomePage>
   ];
 
   final List<IconData> tabIcons = [
-    Icons.person,
-    Icons.home,
-    Icons.person,
-    Icons.settings,
-    Icons.settings,
+    HugeIcons.strokeRoundedHome02,
+    HugeIcons.strokeRoundedBook02,
+    HugeIcons.strokeRoundedSchool01,
+    HugeIcons.strokeRoundedUser,
   ];
 
   final List<String> tabNames = [
-    'Profile',
     'Home',
-    'Profile',
-    'Settings',
-    'Settings',
+    'Words',
+    'Dojo', //TODO: Explain to him that its the revision page
+    'Profile', //TODO: Can implement settings into profile or vice versa
   ];
 
   @override
@@ -65,108 +64,6 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  final List<Category> categories = [
-    Category(
-      title: 'Family',
-      imagePath: 'assets/icons/category/family.png',
-      route: '/family',
-    ),
-    Category(
-      title: 'Animals',
-      imagePath: 'assets/icons/category/zoo.png',
-      route: '/animals',
-    ),
-    Category(
-      title: 'Nature',
-      imagePath: 'assets/icons/category/nature.png',
-      route: '/nature',
-    ),
-    Category(
-      title: 'Sports',
-      imagePath: 'assets/icons/category/sports.png',
-      route: '/sports',
-    ),
-    Category(
-      title: 'Entertainment',
-      imagePath: 'assets/icons/category/entertainment.png',
-      route: '/entertainment',
-    ),
-    Category(
-      title: 'School',
-      imagePath: 'assets/icons/category/school.png',
-      route: '/school',
-    ),
-    Category(
-      title: 'Entertainment',
-      imagePath: 'assets/icons/category/entertainment.png',
-      route: '/entertainment',
-    ),
-    Category(
-      title: 'School',
-      imagePath: 'assets/icons/category/school.png',
-      route: '/school',
-    ),
-    Category(
-      title: 'Entertainment',
-      imagePath: 'assets/icons/category/entertainment.png',
-      route: '/entertainment',
-    ),
-    Category(
-      title: 'School',
-      imagePath: 'assets/icons/category/school.png',
-      route: '/school',
-    ),
-    Category(
-      title: 'Entertainment',
-      imagePath: 'assets/icons/category/entertainment.png',
-      route: '/entertainment',
-    ),
-    Category(
-      title: 'School',
-      imagePath: 'assets/icons/category/school.png',
-      route: '/school',
-    ),
-    Category(
-      title: 'Entertainment',
-      imagePath: 'assets/icons/category/entertainment.png',
-      route: '/entertainment',
-    ),
-    Category(
-      title: 'School',
-      imagePath: 'assets/icons/category/school.png',
-      route: '/school',
-    ),
-    Category(
-      title: 'Entertainment',
-      imagePath: 'assets/icons/category/entertainment.png',
-      route: '/entertainment',
-    ),
-    Category(
-      title: 'School',
-      imagePath: 'assets/icons/category/school.png',
-      route: '/school',
-    ),
-  ];
-
-  final List<FunFact> funFacts = [
-    FunFact(
-      title: 'Anecdote',
-      description: 'Fun facts about Cameroonian languages...',
-      imagePath: 'assets/images/anecdotes.png',
-    ),
-    FunFact(
-      title: 'Anecdote',
-      description: 'Fun facts 1 about Cameroonian languages...',
-      imagePath: 'assets/images/anecdotes.png',
-    ),
-    FunFact(
-      title: 'Anecdote',
-      description: 'Fun facts 2 about Cameroonian languages...',
-      imagePath: 'assets/images/anecdotes.png',
-    ),
-    // Add more fun facts here
-  ];
-
   @override
   Widget build(BuildContext context) {
     final mockStats = LearningStats(
@@ -178,37 +75,49 @@ class _HomePageState extends State<HomePage>
       create: (context) => UserInfoDisplayCubit()..displayUserInfo(),
       child: Scaffold(
         backgroundColor: scaffoldBgColor,
-        body: BlocBuilder<UserInfoDisplayCubit, UserInfoDisplayState>(
-          builder: (context, state) {
-            if (state is UserInfoLoading) {
-              return Center(child: const DefaultLoadingBuilder());
-            }
-            if (state is UserInfoLoaded) {
-              return SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: mediaWidth(context) / 10,
-                  ),
-                  child: Column(
-                    spacing: mediaWidth(context) / 8,
-                    children: [
-                      Padding(
+        body: AnimatedSwitcher(
+          duration: duration,
+          child: IndexedStack(
+            key: ValueKey<int>(currentPage),
+            index: currentPage,
+            children: [
+              BlocBuilder<UserInfoDisplayCubit, UserInfoDisplayState>(
+                builder: (context, state) {
+                  if (state is UserInfoLoading) {
+                    return Center(child: const DefaultLoadingBuilder());
+                  }
+                  if (state is UserInfoLoaded) {
+                    return SafeArea(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: mediaWidth(context) / 18),
-                        child: buildHeader(mockStats, state.user.firstName),
+                          vertical: mediaWidth(context) / 12,
+                        ),
+                        child: Column(
+                          spacing: mediaWidth(context) / 12,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: mediaWidth(context) / 18),
+                              child:
+                                  buildHeader(mockStats, state.user.firstName),
+                            ),
+                            buildCarousel(funFacts),
+                            buildCategoriesGrid(categories),
+                          ],
+                        ),
                       ),
-                      buildCarousel(funFacts),
-                      buildCategoriesGrid(categories),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return Container();
-          },
+                    );
+                  }
+                  return Container();
+                },
+              ),
+              //other pages
+              ..._kTabPages.skip(1),
+            ],
+          ),
         ),
         bottomNavigationBar: PreferredSize(
-          preferredSize: Size.fromHeight(55),
+          preferredSize: Size.fromHeight(50),
           child: UnconstrainedBox(
             child: Container(
               height: tabBarHeight,
@@ -225,20 +134,45 @@ class _HomePageState extends State<HomePage>
                     color: seedColor,
                     blurRadius: 8.0,
                     offset: Offset(0, 4.0),
-                  ), 
+                  ),
                 ],
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
                 child: TabBar(
                   controller: _tabController,
-                  isScrollable: true,
+                  isScrollable: false,
                   physics: const BouncingScrollPhysics(),
+                  indicatorSize: TabBarIndicatorSize.label,
                   padding: EdgeInsets.zero,
                   indicatorPadding: EdgeInsets.zero,
+                  labelColor: seedColorPalette.shade700,
+                  unselectedLabelColor: seedColorPalette.shade800,
+                  indicatorColor: seedColorPalette.shade400,
+                  overlayColor:
+                      WidgetStateProperty.all(seedColorPalette.shade50),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12,
+                  ),
+                  indicator: BoxDecoration(
+                    color: seedColorPalette.shade100,
+                    // borderRadius: BorderRadius.circular(50),
+                    shape: BoxShape.circle,
+                  ),
+                  splashBorderRadius: BorderRadius.circular(99),
                   onTap: (index) {
                     setState(() {
                       currentPage = index;
+                      _tabController.animateTo(
+                        index,
+                        duration: duration,
+                        curve: Curves.bounceInOut,
+                      );
                     });
                   },
                   tabs: List.generate(
