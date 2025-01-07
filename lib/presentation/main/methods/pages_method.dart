@@ -7,6 +7,7 @@ import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
 import 'package:other_screens/presentation/congrats/pages/congrats_page.dart';
+import 'package:other_screens/presentation/learning/pages/home_category.dart';
 import 'package:other_screens/presentation/main/widgets/countdown_timer.dart';
 import 'package:other_screens/presentation/main/widgets/stats_card.dart';
 import 'package:other_screens/presentation/pricing/pages/pricing_page.dart';
@@ -25,7 +26,7 @@ String formatUsername(String username) {
   return username;
 }
 
-Widget buildHeader(LearningStats stats, String username,BuildContext context) {
+Widget buildHeader(LearningStats stats, String username, BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -128,12 +129,18 @@ Widget buildCategoryItem(Category category, BuildContext context) {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (contex) => CongratsPage(
-                    stats: AchievementStats(
-                      wordsLearned: 20,
-                      completionPercentage: 100,
-                    ),
+              builder: (contex) => CategoryPage(
+                    categoryName: category.title,
                   )));
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (contex) => CongratsPage(
+      //               stats: AchievementStats(
+      //                 wordsLearned: 20,
+      //                 completionPercentage: 100,
+      //               ),
+      //             )));
     },
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
