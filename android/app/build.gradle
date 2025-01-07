@@ -54,15 +54,29 @@ kotlinOptions {
         versionName = flutter.versionName
     }
 
+     // Add signing config
+    signingConfigs {
+        release {
+              storeFile file("keystore/release.keystore")
+              storePassword  "123456789"
+              keyAlias "nerala-key"
+              keyPassword  "123456789"
+          
+        }
+    }
+
     buildTypes {
        release {
-            //  signingConfig signingConfigs.release
+             signingConfig signingConfigs.release
         shrinkResources true
         minifyEnabled true
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     
         }
 
+    debug {
+            signingConfig signingConfigs.debug
+        }
 
     }
 }

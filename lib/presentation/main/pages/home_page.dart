@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage>
                               padding: EdgeInsets.symmetric(
                                   horizontal: mediaWidth(context) / 18),
                               child:
-                                  buildHeader(mockStats, state.user.firstName),
+                                  buildHeader(mockStats, state.user.firstName,context),
                             ),
                             buildCarousel(funFacts),
                             buildCategoriesGrid(categories),

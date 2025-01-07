@@ -1,0 +1,4 @@
+-keep class com.nerala.app.** { *; }
+-keep class androidx.lifecycle.** { *; }
+-keep class io.flutter.** { *; }
+-dontwarn io.flutter.embedding.**

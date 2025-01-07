@@ -17,6 +17,7 @@ const Color darkColor = Color(0xFF0C0C0C);
 const Color backgroundColor = Color(0xFF030326);
 const Color systemChrome = Color(0xFF0F9D58);
 const Color scaffoldBgColor = Color(0xFFE6F9E0);
+const Color white = Color.fromARGB(255, 255, 255, 255);
 const Color disabledColor = Color(0xFF8D8D8D);
 
 // State Colors
@@ -48,9 +49,12 @@ BorderRadius topRadius = BorderRadius.vertical(
   top: Radius.circular(16.0),
 );
 
+
+//Premium configs
+const String yearlyPrice = '55000';
+const String monthlyPrice = '5000';
+const Color pricingCardback = Color(0xFF7ED957);
 // Image paths
-const String appIcon = "assets/images/app_icon.png";
-const String logoDark = "assets/images/logo_dark.png";
 const String logoDarkSvg = "assets/images/logo_dark.svg";
 const String logoLight = "assets/images/logo_light.png";
 const String logoLightSvg = "assets/images/logo_light.svg";

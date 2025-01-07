@@ -2,12 +2,14 @@ import "package:carousel_slider/carousel_slider.dart";
 
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
 import 'package:other_screens/presentation/congrats/pages/congrats_page.dart';
 import 'package:other_screens/presentation/main/widgets/countdown_timer.dart';
 import 'package:other_screens/presentation/main/widgets/stats_card.dart';
+import 'package:other_screens/presentation/pricing/pages/pricing_page.dart';
 
 String formatUsername(String username) {
   if (username.isEmpty) return '';
@@ -23,7 +25,7 @@ String formatUsername(String username) {
   return username;
 }
 
-Widget buildHeader(LearningStats stats, String username) {
+Widget buildHeader(LearningStats stats, String username,BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -31,6 +33,11 @@ Widget buildHeader(LearningStats stats, String username) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // CountdownTimer(),
+          GestureDetector(
+              onTap: () {
+                AppNavigator.push(context, PremiumPage());
+              },
+              child: Image.asset("assets/icons/pricing/crown.png")),
           const Text(
             'Hi,',
             style: TextStyle(

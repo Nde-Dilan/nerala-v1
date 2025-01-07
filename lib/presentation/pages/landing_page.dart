@@ -12,6 +12,8 @@ class LandingPage extends StatefulWidget {
   State<LandingPage> createState() => _LandingPageState();
 }
 
+//TODO: Reduce the duration and size of that song
+
 class _LandingPageState extends State<LandingPage> {
   late AudioService _audioService;
 
