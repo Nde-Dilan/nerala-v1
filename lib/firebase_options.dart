@@ -50,8 +50,8 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAeERof9nNHOr58NiUUG3R4CQ0gfIyXHvY',
-    appId: '1:1095875882185:android:ca742d1b3446832c3d7118',
+    apiKey: 'AIzaSyCPTXocSdzAv9hk5wbXRrzg4TDBkDoRTpY',
+    appId: '1:1095875882185:android:2023e43fc91c3a403d7118',
     messagingSenderId: '1095875882185',
     projectId: 'nerala-v1',
     storageBucket: 'nerala-v1.firebasestorage.app',

@@ -19,6 +19,7 @@ const Color systemChrome = Color(0xFF0F9D58);
 const Color scaffoldBgColor = Color(0xFFE6F9E0);
 const Color white = Color.fromARGB(255, 255, 255, 255);
 const Color disabledColor = Color(0xFF8D8D8D);
+const Color listenButton = Color(0xFFD9FFE0);
 
 // State Colors
 const Color successColor = Color(0xFF0F9D58);

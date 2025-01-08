@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
+import 'package:other_screens/presentation/learning/pages/question_page.dart';
 
 class LevelItem extends StatelessWidget {
   const LevelItem(
@@ -36,7 +38,10 @@ class LevelItem extends StatelessWidget {
                   onPressed: () {},
                   child: GestureDetector(
                     onTap: () {
-                      debugPrint("Going to learning page");
+                      AppNavigator.pushReplacement(
+                          context,
+                          QuestionPage(
+                              levelImage: levelImage, levelName: levelName));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -51,9 +56,12 @@ class LevelItem extends StatelessWidget {
                   ))
             ],
           ),
-          Image.asset(
-            levelImage,
-            width: mediaWidth(context) / 4.6,
+          Hero(
+            tag: levelName,
+            child: Image.asset(
+              levelImage,
+              width: mediaWidth(context) / 4.6,
+            ),
           ),
         ],
       ),
