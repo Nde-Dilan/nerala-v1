@@ -44,7 +44,7 @@ class CustomButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          disabledBackgroundColor: Colors.grey,
+          //disabledBackgroundColor: Colors.grey,
         ),
         child: Container(
             height: 50,
@@ -63,7 +63,7 @@ class CustomButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        disabledBackgroundColor: Colors.grey,
+        //disabledBackgroundColor: Colors.grey,
       ),
       child: Text(
         text,

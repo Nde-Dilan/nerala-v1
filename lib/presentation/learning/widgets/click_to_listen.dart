@@ -27,7 +27,7 @@ class ClickToListen extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        disabledBackgroundColor: Colors.grey,
+        //disabledBackgroundColor: Colors.grey,
       ),
       child: Row(
         children: [

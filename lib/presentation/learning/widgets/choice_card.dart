@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:other_screens/data/learning/models/question.dart';
+import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/data/learning/models/choice.dart';
 
 class ChoiceCard extends StatelessWidget {
   final Choice choice;
@@ -24,8 +24,9 @@ class ChoiceCard extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: size,
-        height: size,
+
+        // width: mediaHeight(context) / 10,
+        height: mediaHeight(context) / 3,
         decoration: BoxDecoration(
           color: choice.backgroundColor ?? Colors.white,
           borderRadius: borderRadius,
@@ -35,9 +36,9 @@ class ChoiceCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: isSelected 
-                ? Colors.green.withValues(alpha:0.2)
-                : Colors.black.withValues(alpha:0.05),
+              color: isSelected
+                  ? Colors.green.withValues(alpha: 0.2)
+                  : Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -53,7 +54,7 @@ class ChoiceCard extends StatelessWidget {
                     flex: 3,
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: Image.network(
+                      child: Image.asset(
                         choice.imageUrl!,
                         fit: BoxFit.contain,
                       ),
@@ -73,6 +74,7 @@ class ChoiceCard extends StatelessWidget {
                       ),
                     ),
                     child: Text(
+                      textAlign: TextAlign.center,
                       choice.label,
                       style: TextStyle(
                         fontSize: 16,

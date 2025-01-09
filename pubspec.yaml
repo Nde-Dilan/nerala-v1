@@ -83,6 +83,7 @@ flutter:
     - assets/icons/words/
     - assets/icons/pricing/
     - assets/icons/category-page/
+    - assets/icons/mock-data/
     - assets/icons/category-page/header-images/
     - assets/icons/question-type/
     - assets/icons/question-type/true-false/

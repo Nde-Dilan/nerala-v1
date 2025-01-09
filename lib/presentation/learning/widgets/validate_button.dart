@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
 
@@ -26,7 +25,7 @@ class ValidateButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        disabledBackgroundColor: Colors.grey,
+        // //disabledBackgroundColor: Colors.grey,
       ),
       child: Text(
         text,

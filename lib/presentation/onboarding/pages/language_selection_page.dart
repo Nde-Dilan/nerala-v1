@@ -355,7 +355,7 @@ class NextButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        disabledBackgroundColor: Colors.grey,
+        //disabledBackgroundColor: Colors.grey,
       ),
       child: const Text(
         'NEXT',

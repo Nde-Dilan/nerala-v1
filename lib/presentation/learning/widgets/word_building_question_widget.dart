@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:other_screens/data/learning/models/question.dart';
 import 'package:other_screens/presentation/learning/widgets/draggable_letters_grid.dart';
 import 'package:other_screens/presentation/learning/widgets/fill_blank_question_widget.dart';
+import 'package:other_screens/presentation/learning/widgets/question_card.dart';
 
 class WordBuildingQuestionWidget extends StatelessWidget {
   final WordBuildingQuestion question;
@@ -13,6 +14,7 @@ class WordBuildingQuestionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return QuestionCard(
+      
       question: question,
       child: Column(
         children: [

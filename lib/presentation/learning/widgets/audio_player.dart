@@ -57,6 +57,9 @@ class _AudioPlayerState extends State<AudioPlayer> {
       onTap: () {
         _togglePlay();
       },
+      highlightColor: scaffoldBgColor,
+      focusColor: scaffoldBgColor,
+      hoverColor: scaffoldBgColor,
       child: Container(
         height: widget.height,
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
@@ -75,9 +78,9 @@ class _AudioPlayerState extends State<AudioPlayer> {
               ),
             ),
             IconButton(
-              highlightColor: white,
+              highlightColor: scaffoldBgColor,
               icon: Image.asset(
-                 "assets/icons/question-type/listen-speak/voice.png",
+                "assets/icons/question-type/listen-speak/voice.png",
               ),
               onPressed: _togglePlay,
             ),
@@ -86,4 +89,4 @@ class _AudioPlayerState extends State<AudioPlayer> {
       ),
     );
   }
-} 
+}

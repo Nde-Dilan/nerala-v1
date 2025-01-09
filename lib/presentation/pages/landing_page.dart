@@ -21,7 +21,7 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     super.initState();
     _audioService = AudioService();
-    _initAudioAsync();
+    // _initAudioAsync();
   }
 
   Future<void> _initAudioAsync() async {
@@ -138,7 +138,7 @@ class NextButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        disabledBackgroundColor: Colors.grey,
+        //disabledBackgroundColor: Colors.grey,
       ),
       child: Text(
         text,

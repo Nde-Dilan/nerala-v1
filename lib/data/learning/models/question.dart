@@ -1,5 +1,6 @@
 // lib/models/question.dart
 import 'package:flutter/material.dart';
+import 'package:other_screens/data/learning/models/choice.dart';
 
 abstract class Question {
   final String title;
@@ -12,13 +13,15 @@ class FillInBlankQuestion extends Question {
   final String sentence;
   final String correctAnswer;
   final String? imageUrl;
+  final String? assetImage;
 
   FillInBlankQuestion({
-    required super.title,
-    required super.instruction,
+      super.title='',
+      super.instruction='',
     required this.sentence,
     required this.correctAnswer,
     this.imageUrl,
+    this.assetImage,
   });
 }
 
@@ -27,27 +30,12 @@ class MultipleChoiceQuestion extends Question {
   final String correctAnswer;
   final String? audioUrl;
 
-  MultipleChoiceQuestion({
-    required super.title,
-    required super.instruction,
+  MultipleChoiceQuestion({ 
     required this.choices,
     required this.correctAnswer,
-    this.audioUrl,
-  });
-}
-
-// / lib/models/choice.dart
-class Choice {
-  final String value;
-  final String label;
-  final String? imageUrl;
-  final Color? backgroundColor;
-
-  const Choice({
-    required this.value,
-    required this.label,
-    this.imageUrl,
-    this.backgroundColor,
+    this.audioUrl, 
+     super.title='', 
+     super.instruction='',
   });
 }
 

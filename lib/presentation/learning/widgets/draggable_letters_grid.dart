@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:other_screens/data/learning/models/question.dart';
+import 'package:other_screens/data/learning/models/choice.dart';
+
 import 'package:other_screens/presentation/learning/widgets/choice_card.dart';
 
 class DraggableLettersGrid extends StatefulWidget {
@@ -11,7 +12,7 @@ class DraggableLettersGrid extends StatefulWidget {
     super.key,
     required this.letters,
     required this.onWordBuilt,
-    this.maxWordLength = 8,
+    this.maxWordLength = 10,
   });
 
   @override
@@ -153,16 +154,16 @@ class _DraggableLettersGridState extends State<DraggableLettersGrid> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: _selectedLetters.isEmpty ? null : _resetSelection,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.shade50,
-                  foregroundColor: Colors.red,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                child: const Text('Reset'),
-              ),
+              // ElevatedButton(
+              //   onPressed: _selectedLetters.isEmpty ? null : _resetSelection,
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.red.shade50,
+              //     foregroundColor: Colors.red,
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              //   ),
+              //   child: const Text('Reset'),
+              // ),
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: _selectedLetters.isEmpty ? null : _submitWord,
