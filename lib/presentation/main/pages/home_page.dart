@@ -5,8 +5,6 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/loading_builder.dart';
 import 'package:other_screens/data/main/mock_data.dart';
-import 'package:other_screens/data/models/main/fun_fact_model.dart';
-import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
 import 'package:other_screens/presentation/auth/pages/login_page.dart';
 import 'package:other_screens/presentation/dictionary/pages/dictionary.dart';

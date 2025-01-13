@@ -3,10 +3,11 @@ import 'package:other_screens/common/constants.dart';
 
 class TrueOrFalseWidget extends StatelessWidget {
   const TrueOrFalseWidget(
-      {super.key, required this.word, required this.wordImage});
+      {super.key, required this.word, this.wordImage, this.iconImage});
 
   final String word;
-  final String wordImage;
+  final String? wordImage;
+  final IconData? iconImage;
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +27,12 @@ class TrueOrFalseWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset(
-            wordImage,
-            width: mediaWidth(context) * 0.65,
-          ),
+          wordImage != null
+              ? (Image.asset(
+                  wordImage!,
+                  width: mediaWidth(context) * 0.65,
+                ))
+              : (iconImage != null ? (Icon(iconImage)) : Text("")),
           SizedBox(
             height: mediaHeight(context) / 8,
           ),
@@ -43,10 +46,14 @@ class TrueOrFalseWidget extends StatelessWidget {
   }
 }
 
-
 Widget trueButton(VoidCallback onPressed) {
-  return IconButton(onPressed: onPressed, icon: Image.asset("assets/icons/question-type/true-false/true.png"));
+  return IconButton(
+      onPressed: onPressed,
+      icon: Image.asset("assets/icons/question-type/true-false/true.png"));
 }
+
 Widget falseButton(VoidCallback onPressed) {
-  return IconButton(onPressed: onPressed, icon: Image.asset("assets/icons/question-type/true-false/false.png"));
+  return IconButton(
+      onPressed: onPressed,
+      icon: Image.asset("assets/icons/question-type/true-false/false.png"));
 }

@@ -3,13 +3,18 @@ import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/music/source/audio_service.dart';
 import 'package:other_screens/presentation/learning/pages/question_page.dart';
+import 'package:other_screens/presentation/pricing/pages/pricing_page.dart';
 
 class LevelItem extends StatefulWidget {
   const LevelItem(
-      {super.key, required this.levelName, required this.levelImage});
+      {super.key,
+      required this.levelName,
+      required this.levelImage,
+      required this.isPremium});
 
   final String levelName;
   final String levelImage;
+  final bool isPremium;
 
   @override
   State<LevelItem> createState() => _LevelItemState();
@@ -47,10 +52,25 @@ class _LevelItemState extends State<LevelItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text(
-                widget.levelName,
-                style: AppTextStyles.h2.copyWith(color: white),
-              ),
+              widget.isPremium
+                  ? Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            AppNavigator.push(context, PremiumPage());
+                          },
+                          child: Image.asset("assets/icons/pricing/crown.png"),
+                        ),
+                        Text(
+                          widget.levelName,
+                          style: AppTextStyles.h2.copyWith(color: white),
+                        )
+                      ],
+                    )
+                  : Text(
+                      widget.levelName,
+                      style: AppTextStyles.h2.copyWith(color: white),
+                    ),
               TextButton(
                   style: ButtonStyle(
                       fixedSize: WidgetStatePropertyAll<Size>(Size(
@@ -59,11 +79,13 @@ class _LevelItemState extends State<LevelItem> {
                   onPressed: () {},
                   child: GestureDetector(
                     onTap: () {
+
+                      widget.isPremium ? PremiumPage() :
                       AppNavigator.pushReplacement(
                           context,
                           QuestionPage(
                               levelImage: widget.levelImage,
-                              levelName: widget.levelName));
+                              levelName: widget.levelName)) ;
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,

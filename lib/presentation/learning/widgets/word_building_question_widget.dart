@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:other_screens/data/learning/models/question.dart';
 import 'package:other_screens/presentation/learning/widgets/draggable_letters_grid.dart';
-import 'package:other_screens/presentation/learning/widgets/fill_blank_question_widget.dart';
 import 'package:other_screens/presentation/learning/widgets/question_card.dart';
 
 class WordBuildingQuestionWidget extends StatelessWidget {
@@ -19,7 +18,7 @@ class WordBuildingQuestionWidget extends StatelessWidget {
       child: Column(
         children: [
           DraggableLettersGrid(
-            letters: question.availableLetters,
+            letters: question.availableSyllables,
             onWordBuilt: onAnswer,
           ),
         ],

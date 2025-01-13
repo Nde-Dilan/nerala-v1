@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
 
 class PremiumPackageCard extends StatelessWidget {
-  const PremiumPackageCard({Key? key}) : super(key: key);
+  const PremiumPackageCard({super.key});
 
   @override
   Widget build(BuildContext context) {

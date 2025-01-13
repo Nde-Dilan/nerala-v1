@@ -10,7 +10,6 @@ import 'package:other_screens/common/widgets/custom_button.dart';
 import 'package:other_screens/common/widgets/forms/password_text_formfield.dart';
 import 'package:other_screens/common/widgets/forms/simple_text_formfield.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
-import 'package:other_screens/domain/auth/usecases/facebook_register.dart';
 import 'package:other_screens/domain/auth/usecases/google_register.dart';
 import 'package:other_screens/domain/auth/usecases/no_params.dart';
 import 'package:other_screens/presentation/auth/pages/login_page.dart';

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/data/learning/models/question.dart';
 import 'package:other_screens/presentation/learning/widgets/choice_card.dart';
-import 'package:other_screens/presentation/learning/widgets/fill_blank_question_widget.dart';
 import 'package:other_screens/presentation/learning/widgets/question_card.dart';
 
 class MultipleChoiceQuestionWidget extends StatelessWidget {

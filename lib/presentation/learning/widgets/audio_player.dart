@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
-import 'package:other_screens/presentation/learning/widgets/question_header.dart';
 
 class AudioPlayer extends StatefulWidget {
   final String url;

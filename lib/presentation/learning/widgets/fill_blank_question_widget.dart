@@ -12,12 +12,12 @@ class FillBlankQuestionWidget extends StatelessWidget {
   final FillInBlankQuestion question;
   final String firstPartOfSentence;
   final String secondPartOfSentence;
-  final Function(String) onAnswer;
+  final ValueChanged<String> onTextChanged;
 
   const FillBlankQuestionWidget(
       {super.key,
       required this.question,
-      required this.onAnswer,
+      required this.onTextChanged,
       required this.firstPartOfSentence,
       required this.secondPartOfSentence});
 
@@ -47,7 +47,7 @@ class FillBlankQuestionWidget extends StatelessWidget {
                       width: mediaWidth(context) / 6,
                       child: TextField(
                         textAlign: TextAlign.center,
-                        onChanged: onAnswer,
+                        onChanged: onTextChanged,
                         decoration: InputDecoration(
                           isDense: true,
                           contentPadding:

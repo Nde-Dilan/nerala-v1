@@ -6,9 +6,7 @@ import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
-import 'package:other_screens/presentation/congrats/pages/congrats_page.dart';
 import 'package:other_screens/presentation/learning/pages/home_category.dart';
-import 'package:other_screens/presentation/main/widgets/countdown_timer.dart';
 import 'package:other_screens/presentation/main/widgets/stats_card.dart';
 import 'package:other_screens/presentation/pricing/pages/pricing_page.dart';
 
@@ -130,17 +128,8 @@ Widget buildCategoryItem(Category category, BuildContext context) {
           context,
           MaterialPageRoute(
               builder: (contex) => CategoryPage(
-                    categoryName: category.title,
+                    categoryName: category.title, quoteText: category.quoteText, categoryImage: category.imagePath, levels: category.numberOfLevels,
                   )));
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (contex) => CongratsPage(
-      //               stats: AchievementStats(
-      //                 wordsLearned: 20,
-      //                 completionPercentage: 100,
-      //               ),
-      //             )));
     },
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,

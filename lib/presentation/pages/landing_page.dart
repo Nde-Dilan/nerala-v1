@@ -4,9 +4,10 @@ import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/data/music/source/audio_service.dart';
 import 'package:other_screens/presentation/auth/pages/login_page.dart';
 import 'package:other_screens/presentation/auth/pages/register_page.dart';
+import 'package:other_screens/presentation/learning/pages/question_page.dart';
 
 class LandingPage extends StatefulWidget {
-  LandingPage({super.key});
+  const LandingPage({super.key});
 
   @override
   State<LandingPage> createState() => _LandingPageState();
@@ -91,7 +92,7 @@ class _LandingPageState extends State<LandingPage> {
                 onPressed: () {
                   // Navigate to "Get Started" screen
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()));
+                      MaterialPageRoute(builder: (context) => QuestionPage(levelName: "Family Seed", levelImage: "assets/icons/category/family.png",)));
                 },
                 isEnabled: true,
                 text: 'GET STARTED',
@@ -107,7 +108,7 @@ class _LandingPageState extends State<LandingPage> {
               ),
               SizedBox(height: 32.0),
             ],
-          ),
+          ), 
         ),
       ),
     );

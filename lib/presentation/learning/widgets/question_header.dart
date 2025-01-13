@@ -10,14 +10,14 @@ class QuestionHeader extends StatelessWidget {
   final Color backgroundColor;
 
   const QuestionHeader({
-    Key? key,
+    super.key,
     required this.title,
     required this.instruction,
     this.subtitle,
     this.leading,
     this.avatarSize = 40.0,
     this.backgroundColor = Colors.white,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
