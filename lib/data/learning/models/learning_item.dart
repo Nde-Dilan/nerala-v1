@@ -21,21 +21,4 @@ final List<LevelItem> learningItems = [
       levelImage: "assets/icons/category/family.png"),
 ];
 
-final List<FunFact> funFacts = [
-  FunFact(
-    title: 'Anecdote',
-    description: 'Fun facts about Cameroonian languages...',
-    imagePath: 'assets/images/anecdotes.png',
-  ),
-  FunFact(
-    title: 'Anecdote',
-    description: 'Fun facts 1 about Cameroonian languages...',
-    imagePath: 'assets/images/anecdotes.png',
-  ),
-  FunFact(
-    title: 'Anecdote',
-    description: 'Fun facts 2 about Cameroonian languages...',
-    imagePath: 'assets/images/anecdotes.png',
-  ),
-  // Add more fun facts here
-];
+ 

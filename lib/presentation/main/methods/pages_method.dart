@@ -6,6 +6,7 @@ import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
+import 'package:other_screens/presentation/annecdotes/pages/annecdote_page.dart';
 import 'package:other_screens/presentation/learning/pages/home_category.dart';
 import 'package:other_screens/presentation/main/widgets/stats_card.dart';
 import 'package:other_screens/presentation/pricing/pages/pricing_page.dart';
@@ -67,7 +68,7 @@ Widget buildCarousel(List<FunFact> funFacts) {
   return CarouselSlider.builder(
     itemCount: funFacts.length,
     itemBuilder: (context, index, realIndex) {
-      return buildCarouselItem(funFacts[index]);
+      return buildCarouselItem(funFacts[index],context);
     },
     options: CarouselOptions(
       height: 200,
@@ -78,27 +79,47 @@ Widget buildCarousel(List<FunFact> funFacts) {
   );
 }
 
-Widget buildCarouselItem(FunFact funFact) {
+Widget buildCarouselItem(FunFact funFact,BuildContext context) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 8.0),
     decoration: BoxDecoration(
       color: seedColorPalette.shade100,
       borderRadius: BorderRadius.circular(16),
     ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          funFact.imagePath,
-          height: 100,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          funFact.description,
-          textAlign: TextAlign.center,
-          style: AppTextStyles.body,
-        ),
-      ],
+    child: GestureDetector(
+      onTap: (){
+         final anecdote = Anecdote(
+                    title: 'Le Lièvre et la Tortue : Une Fable Nouvelle',
+                    subtitle: 'Une Fable Nouvelle',
+                    content:
+                        'Dans une forêt dense où le soleil jouait avec les feuilles...',
+                    coverImage: 'assets/images/cover.png',
+                    thumbnailImage: 'assets/images/thumbnail.png',
+                    category: 'Family members',
+                  );
+                  // Navigate to "LOG IN" screen
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AnecdoteDetailScreen(
+                                anecdote: anecdote,
+                              )));
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            funFact.imagePath,
+            height: 100,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            funFact.description,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.body,
+          ),
+        ],
+      ),
     ),
   );
 }

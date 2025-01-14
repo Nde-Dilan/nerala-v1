@@ -92,7 +92,9 @@ class _LandingPageState extends State<LandingPage> {
                 onPressed: () {
                   // Navigate to "Get Started" screen
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => QuestionPage(levelName: "Family Seed", levelImage: "assets/icons/category/family.png",)));
+                      MaterialPageRoute(builder: (context) => RegisterPage()));
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => QuestionPage(levelName: "Family Seed", levelImage: "assets/icons/category/family.png",)));
                 },
                 isEnabled: true,
                 text: 'GET STARTED',
@@ -108,7 +110,7 @@ class _LandingPageState extends State<LandingPage> {
               ),
               SizedBox(height: 32.0),
             ],
-          ), 
+          ),
         ),
       ),
     );

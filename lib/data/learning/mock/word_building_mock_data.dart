@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../models/question.dart';
 
+final List<TrueOrFalseQuestion> boolQuestions = [
+  TrueOrFalseQuestion(
+    word: "Mbáp",
+    correctAnswer: true,
+    icon: Icons.restaurant_menu,
+  ),
+
+];
+
 var wordBuildingQuestionList = [
   WordBuildingQuestion(
     title: 'Family',
@@ -76,121 +85,121 @@ var wordBuildingQuestionList = [
 ];
 
 final List<TrueOrFalseQuestion> trueOrFalseQuestionList = [
-  TrueOrFalseQuestion(
-    word: "Mbáp",
-    correctAnswer: true,
-    icon: Icons.restaurant_menu,
-  ),
-  
-  TrueOrFalseQuestion(
-    word: "Nkãp",
-    correctAnswer: true,
-    icon: Icons.attach_money,
-  ),
-  
-  TrueOrFalseQuestion(
-    word: "Ndē",
-    correctAnswer: true,
-    icon: Icons.home,
-  ),
-  
-  TrueOrFalseQuestion(
-    word: "Sãŋndē",
-    correctAnswer: true,
-    icon: Icons.cleaning_services,
-  ),
-  
-  TrueOrFalseQuestion(
-    word: "Sóck",
-    correctAnswer: true,
-    icon: Icons.local_fire_department,
-  ),
-  
+  // TrueOrFalseQuestion(
+  //   word: "Mbáp",
+  //   correctAnswer: true,
+  //   icon: Icons.restaurant_menu,
+  // ),
+
+  // TrueOrFalseQuestion(
+  //   word: "Nkãp",
+  //   correctAnswer: true,
+  //   icon: Icons.attach_money,
+  // ),
+
+  // TrueOrFalseQuestion(
+  //   word: "Ndē",
+  //   correctAnswer: true,
+  //   icon: Icons.home,
+  // ),
+
+  // TrueOrFalseQuestion(
+  //   word: "Sãŋndē",
+  //   correctAnswer: true,
+  //   icon: Icons.cleaning_services,
+  // ),
+
+  // TrueOrFalseQuestion(
+  //   word: "Sóck",
+  //   correctAnswer: true,
+  //   icon: Icons.local_fire_department,
+  // ),
+
   // TrueOrFalseQuestion(
   //   word: "Ŋzẹ̄",
   //   correctAnswer: true,
   //   icon: Icons.checkroom,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Mǝvøọ",
   //   correctAnswer: true,
   //   icon: Icons.pets,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Fœ",
   //   correctAnswer: true,
   //   icon: Icons.person,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Mbwø",
   //   correctAnswer: true,
   //   icon: Icons.back_hand,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Mọ̀ck",
   //   correctAnswer: true,
   //   icon: Icons.local_fire_department,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Ṣhwǝ",
   //   correctAnswer: true,
   //   icon: Icons.water_drop,
   // ),
-  
+
   // False answers (incorrect variations)
-  TrueOrFalseQuestion(
-    word: "Mbápa",
-    correctAnswer: false,
-    icon: Icons.restaurant_menu,
-  ),
-  
-  TrueOrFalseQuestion(
-    word: "Nkãpa",
-    correctAnswer: false,
-    icon: Icons.attach_money,
-  ),
-  
-  TrueOrFalseQuestion(
-    word: "Ndēe",
-    correctAnswer: false,
-    icon: Icons.home,
-  ),
-  
+  // TrueOrFalseQuestion(
+  //   word: "Mbápa",
+  //   correctAnswer: false,
+  //   icon: Icons.restaurant_menu,
+  // ),
+
+  // TrueOrFalseQuestion(
+  //   word: "Nkãpa",
+  //   correctAnswer: false,
+  //   icon: Icons.attach_money,
+  // ),
+
+  // TrueOrFalseQuestion(
+  //   word: "Ndēe",
+  //   correctAnswer: false,
+  //   icon: Icons.home,
+  // ),
+
   // TrueOrFalseQuestion(
   //   word: "Sãŋndēa",
   //   correctAnswer: false,
   //   icon: Icons.cleaning_services,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Sócka",
   //   correctAnswer: false,
   //   icon: Icons.local_fire_department,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Ŋzẹ̄e",
   //   correctAnswer: false,
   //   icon: Icons.checkroom,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Mǝvøọa",
   //   correctAnswer: false,
   //   icon: Icons.pets,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Fœe",
   //   correctAnswer: false,
   //   icon: Icons.person,
   // ),
-  
+
   // TrueOrFalseQuestion(
   //   word: "Mbwøo",
   //   correctAnswer: false,

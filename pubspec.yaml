@@ -51,6 +51,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.2
   pie_menu: ^3.2.7
   just_audio: ^0.9.42
+  share_plus: ^10.1.4
 
 dev_dependencies:
   flutter_test:
