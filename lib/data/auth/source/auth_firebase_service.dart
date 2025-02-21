@@ -18,6 +18,8 @@ abstract class AuthFirebaseService {
   Future<bool> isLoggedIn();
   Future<Either> getUser();
 
+  Future<Either> logout();
+
   Future<Either> loginWithGoogle();
   Future<Either> loginWithFacebook();
 
@@ -287,6 +289,18 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       return Left(message);
     } catch (e) {
       return Left('An unknown error occurred during Facebook sign up: $e');
+    }
+  }
+
+  @override
+  Future<Either> logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      _log.info("User logged out successfully");
+      return const Right('Logout successful');
+    } catch (e) {
+      _log.severe("Error during logout: $e");
+      return const Left('An error occurred during logout');
     }
   }
 }

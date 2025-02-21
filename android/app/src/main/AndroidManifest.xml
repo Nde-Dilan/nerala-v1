@@ -11,7 +11,9 @@
     <application
         android:label="Nerala"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:enableOnBackInvokedCallback="true"
+        >
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -70,6 +72,9 @@
 
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
     <queries>
+     <intent>
+    <action android:name="android.intent.action.TTS_SERVICE" />
+  </intent>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>

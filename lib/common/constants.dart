@@ -1,13 +1,25 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:other_screens/common/loading_builder.dart';
+import 'package:other_screens/data/models/main/learning_stats.dart';
+import 'package:other_screens/presentation/auth/pages/login_page.dart';
+import 'package:other_screens/presentation/dictionary/pages/dictionary.dart';
+import 'package:other_screens/presentation/main/pages/home_page.dart';
+import 'package:other_screens/presentation/profile/profile_page.dart';
 
 // App version
 const String appVersionNumber = "1.0.0";
 
-// Nohemi font family
-const String nohemiFont = 'Poppins';
+// language Code
+///
+/// languages: [mai-IN, hr-HR, ko-KR, mr-IN, as-IN, ru-RU, zh-TW, hu-HU, sw-KE, sd-IN, ks-IN, th-TH, doi-IN, ur-PK, nb-NO, da-DK, tr-TR, et-EE, pt-PT, vi-VN, en-US, ur-IN, sat-IN, sq-AL, sv-SE, ar, sr-RS, su-ID, bn-BD, bs-BA, mni-IN, gu-IN, kn-IN, el-GR, hi-IN, he-IL, fi-FI, bn-IN, km-KH, fr-FR, uk-UA, pa-IN, en-AU, nl-NL, fr-CA, lv-LV, pt-BR, de-DE, ml-IN, si-LK, cs-CZ, is-IS, pl-PL, ca-ES, sk-SK, it-IT, fil-PH, lt-LT, ne-NP, ms-MY, en-NG, nl-BE, zh-CN, es-ES, ja-JP, ta-IN, bg-BG, cy-GB, or-IN, brx-IN, sa-IN, yue-HK, en-IN, es-US, kok-IN, jv-ID, sl-SI, id-ID, te-IN, ro-RO, en-GB]
+
+const String languageCode = "Zh-Cn";
+
+//Free Practice Duration
+const int freeTime = 120;
 
 // Colors
 const Color seedColor = Color(0xFF31E600);
@@ -50,7 +62,6 @@ BorderRadius topRadius = BorderRadius.vertical(
   top: Radius.circular(16.0),
 );
 
-
 //Premium configs
 const String yearlyPrice = '55000';
 const String monthlyPrice = '5000';
@@ -83,6 +94,36 @@ const String neutralFace = "assets/images/neutral_face.svg";
 const String slightlySmilingFace = "assets/images/slightly_smiling_face.svg";
 const String agentCap = "assets/images/agent_cap.svg";
 const String grinningFace = "assets/images/grinning_face.svg";
+
+//Fake stats
+final mockStats = LearningStats(
+  learningRate: 0.75,
+  totalWordsLearned: 250,
+  totalDaysLearned: 30,
+);
+
+//Tab settings
+
+final List<Widget> kTabPages = [
+  const HomePage(),
+  const DictionaryPage(),
+  const LoginPage(),
+  const ProfileScreen(),
+];
+
+final List<IconData> tabIcons = [
+  HugeIcons.strokeRoundedHome02,
+  HugeIcons.strokeRoundedBook02,
+  HugeIcons.strokeRoundedSchool01,
+  HugeIcons.strokeRoundedUser,
+];
+
+final List<String> tabNames = [
+  'Home',
+  'Words',
+  'Dojo', //TODO: Explain to him that its the revision page
+  'Profile', //TODO: Can implement settings into profile or vice versa
+];
 
 // Padding
 const EdgeInsets allPadding = EdgeInsets.all(8.0);

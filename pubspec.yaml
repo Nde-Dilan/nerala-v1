@@ -52,6 +52,12 @@ dependencies:
   pie_menu: ^3.2.7
   just_audio: ^0.9.42
   share_plus: ^10.1.4
+  cached_network_image: ^3.4.1
+  showcaseview: ^4.0.1
+  flutter_ai_toolkit: ^0.6.8
+  google_generative_ai: ^0.4.6
+  flutter_tts: ^4.2.2
+  shared_preferences: ^2.5.2
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +85,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/storyAssets/
     - assets/icons/
     - assets/icons/category/
     - assets/icons/words/
@@ -89,6 +96,12 @@ flutter:
     - assets/icons/question-type/
     - assets/icons/question-type/true-false/
     - assets/icons/question-type/listen-speak/
+    - assets/images/category/
+    - assets/images/category/school/
+    - assets/images/category/nature/
+    - assets/images/category/family/
+    - assets/images/category/animals/
+    - assets/images/category/climate/
     - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see

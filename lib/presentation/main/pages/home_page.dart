@@ -7,6 +7,7 @@ import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/common/loading_builder.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
 import 'package:other_screens/data/main/mock_data.dart';
+import 'package:other_screens/domain/auth/entities/user_entity.dart';
 import 'package:other_screens/presentation/main/bloc/display_user_info_cubit.dart';
 import 'package:other_screens/presentation/main/bloc/display_user_info_state.dart';
 import 'package:other_screens/presentation/main/methods/pages_method.dart';
@@ -51,11 +52,11 @@ class _HomePageState extends State<HomePage>
 
     // Check onboarding status after widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkOnboardingStatus();
+      // _checkOnboardingStatus();
     });
   }
 
-  void _checkOnboardingStatus() async {
+  void _checkOnboardingStatus(UserEntity user) async {
     final prefs = await SharedPreferences.getInstance();
     final hasCompletedOnboarding =
         prefs.getBool('has_completed_onboarding') ?? false;
@@ -70,21 +71,15 @@ class _HomePageState extends State<HomePage>
           backgroundColor: seedColor,
           icon: Icons.person_outline,
           actions: [
-            BlocProvider(
-              create: (context) => UserInfoDisplayCubit()..displayUserInfo(),
-              child: BlocBuilder<UserInfoDisplayCubit, UserInfoDisplayState>(
-                builder: (context, state) {
-                   
-                
-                    return TextButton(
+       TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                         AppNavigator.push(
                           context,
                           GoalsPage(
                             userCreationReq: UserCreationReq()
-                              ..email = state.user.email
-                              ..firstName = state.user.firstName,
+                              ..email = user.email
+                              ..firstName = user.firstName,
                           ),
                         );
                       },
@@ -95,10 +90,8 @@ class _HomePageState extends State<HomePage>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    );
-                  
-                },
-              ),
+                    
+                
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
