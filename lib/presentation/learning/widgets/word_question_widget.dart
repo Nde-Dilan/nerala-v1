@@ -4,12 +4,16 @@ import 'package:other_screens/common/constants.dart';
 
 class WordBuildingQuestionWidget extends StatefulWidget {
   final WordBuildingQuestion question;
+  final IconData? icon;
+  final String? imagePath;
   final Function(String) onAnswer;
 
   const WordBuildingQuestionWidget({
     super.key,
     required this.question,
     required this.onAnswer,
+    this.icon,
+    this.imagePath,
   });
 
   @override
@@ -27,7 +31,10 @@ class _WordBuildingQuestionWidgetState
 
       // Check if word is complete
       String currentWord = selectedSyllables.join();
-      if (currentWord.length == widget.question.targetWord.length) {
+      if (currentWord == widget.question.targetWord ||
+          currentWord.length == widget.question.targetWord.length ||
+          selectedSyllables.length ==
+              widget.question.availableSyllables.length) {
         widget.onAnswer(currentWord);
         Future.delayed(const Duration(seconds: 4), () {
           _handleReset();
@@ -48,13 +55,21 @@ class _WordBuildingQuestionWidgetState
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          SizedBox(height: mediaHeight(context) / 20),
-          // Graduation cap icon
-          const Icon(
-            Icons.school,
-            size: 100,
-            color: Colors.grey,
-          ),
+          SizedBox(height: mediaHeight(context) / 30),
+          // Image or icon
+
+          widget.imagePath != null
+              ? (Image.asset(
+                  widget.imagePath!,
+                  width: mediaWidth(context) * 0.65,
+                  height: mediaWidth(context) * 0.65,
+                ))
+              : (Icon(
+                  widget.icon,
+                  size: 100,
+                  color: Colors.grey,
+                )),
+
           SizedBox(height: mediaHeight(context) / 16),
 
           // Available syllables

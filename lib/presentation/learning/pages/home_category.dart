@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/learning/models/learning_item.dart';
-import 'package:other_screens/presentation/learning/widgets/level_item.dart';
 import 'package:other_screens/presentation/pricing/pages/pricing_page.dart';
 
 // Main Category Page
 class CategoryPage extends StatefulWidget {
-  const CategoryPage({super.key, required this.categoryName, required this.quoteText, required this.categoryImage, required this.levels});
+  const CategoryPage(
+      {super.key,
+      required this.categoryName,
+      required this.quoteText,
+      required this.categoryImage,
+      required this.levels});
   final String categoryName;
   final String categoryImage;
   final int levels;
@@ -18,6 +22,15 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    //   WidgetsBinding.instance.addPostFrameCallback((_) =>
+    // ShowCaseWidget.of(context).startShowCase([_one, _two, _three])
+// );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,11 +66,11 @@ class _CategoryPageState extends State<CategoryPage> {
                 const SizedBox(height: 9),
                 _buildQuote(widget.quoteText),
                 const SizedBox(height: 10),
+
                 Column(
                   spacing: mediaWidth(context) / 14,
-                  children: learningItems,
+                  children: _getLearningItems(),
                 ),
-                 
               ],
             ),
           ),
@@ -66,7 +79,25 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  
+  // Add this function in the _CategoryPageState class
+  List<Widget> _getLearningItems() {
+    switch (widget.categoryName.toLowerCase()) {
+      case 'family':
+        return learningItemsFamilly;
+      case 'animals':
+        return learningItemsAnimals;
+      case 'nature':
+        return learningItemsNature;
+      case 'sports':
+        return learningItemsSports;
+      case 'entertainment':
+        return learningItemsEntertainment;
+      case 'school':
+        return learningItemsSchool;
+      default:
+        return []; // Return empty list as fallback
+    }
+  }
 
   Widget _buildHeroSection() {
     return Container(
@@ -105,7 +136,7 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Widget _buildQuote(String textQuote) {
-    return   Text(
+    return Text(
       textQuote,
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -116,4 +147,3 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 }
- 

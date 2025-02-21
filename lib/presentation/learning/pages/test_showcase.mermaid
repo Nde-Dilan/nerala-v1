@@ -1,0 +1,85 @@
+classDiagram
+    class User {
+        -userId: string
+        -firstName: string
+        -lastName: string
+        -email: string
+        -subscriptionType: PremiumStatus
+        -stats: LearningStats
+        +register()
+        +login()
+        +updateProfile()
+    }
+
+    class LearningStats {
+        -learningRate: double
+        -totalWordsLearned: int
+        -totalDaysLearned: int
+        +updateStats()
+        +getProgress()
+    }
+
+    class Question {
+        -category: string
+        -difficulty: Level
+        -type: QuestionType
+        +checkAnswer()
+        +getHint()
+    }
+
+    class WordBuildingQuestion {
+        -targetWord: string
+        -meaning: string
+        -options: List<string>
+    }
+
+    class FillInBlankQuestion {
+        -sentence: string
+        -missingWord: string
+        -translation: string
+    }
+
+    class TrueOrFalseQuestion {
+        -statement: string
+        -isCorrect: bool
+    }
+
+    class Story {
+        -title: string
+        -body: string
+        -imageUrl: string
+        -thumbnailUrl: string
+        -keywords: Map<string, string>
+        +getTranslations()
+    }
+
+    class Category {
+        -title: string
+        -imagePath: string
+        -numberOfLevels: int
+        -quoteText: string
+    }
+
+    class Dictionary {
+        -entries: List<DictionaryEntry>
+        +searchWord()
+        +getTranslation()
+    }
+
+    class PremiumFeatures {
+        -isUnlimited: bool
+        -hasNoAds: bool
+        -duration: Duration
+        +upgrade()
+        +checkStatus()
+    }
+
+    Question <|-- WordBuildingQuestion
+    Question <|-- FillInBlankQuestion
+    Question <|-- TrueOrFalseQuestion
+    User "1" -- "1" LearningStats
+    User "1" -- "1" PremiumFeatures
+    Category "1" -- "*" Question
+    Story "*" -- "1" Category
+    Dictionary "1" -- "*" DictionaryEntry
+    User "1" -- "*" Category

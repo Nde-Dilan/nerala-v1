@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:other_screens/data/models/main/dictionary_model.dart';
+import 'package:other_screens/presentation/dictionary/pages/tts_button.dart';
 
 class DictionaryCard extends StatelessWidget {
   final DictionaryEntry entry;
@@ -48,12 +49,7 @@ class DictionaryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            IconButton(
-              icon: const Icon(Icons.volume_up, color: Colors.green),
-              onPressed: () {
-                // Implement audio playback functionality
-              },
-            ),
+            TextToSpeechButton(word:entry.word),
           ],
         ),
       ),

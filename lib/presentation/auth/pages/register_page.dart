@@ -264,6 +264,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       return BlocListener<ButtonStateCubit, ButtonState>(
                         listener: (context, state) {
                           // TODO: implement listener
+
+                          
                         },
                         child: GestureDetector(
                           onTap: () {

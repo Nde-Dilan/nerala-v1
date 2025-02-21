@@ -1,10 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/data/music/source/audio_service.dart';
 import 'package:other_screens/presentation/auth/pages/login_page.dart';
 import 'package:other_screens/presentation/auth/pages/register_page.dart';
-import 'package:other_screens/presentation/learning/pages/question_page.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -22,7 +20,7 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     super.initState();
     _audioService = AudioService();
-    // _initAudioAsync();
+    _initAudioAsync();
   }
 
   Future<void> _initAudioAsync() async {

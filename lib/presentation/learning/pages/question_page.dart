@@ -1,4 +1,6 @@
 // lib/models/question_type.dart
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:other_screens/common/constants.dart';
@@ -7,12 +9,19 @@ import 'package:other_screens/data/learning/mock/word_building_mock_data.dart';
 import 'package:other_screens/data/learning/models/question.dart';
 import 'package:other_screens/data/learning/models/question_state.dart';
 import 'package:other_screens/presentation/congrats/pages/congrats_page.dart';
+import 'package:other_screens/presentation/learning/pages/times_up_page.dart';
+import 'package:other_screens/presentation/learning/services/learning_stats_service.dart';
+import 'package:other_screens/presentation/learning/utils/split_sentence.dart';
 import 'package:other_screens/presentation/learning/widgets/feedback_overlay.dart';
 import 'package:other_screens/presentation/learning/widgets/fill_blank_question_widget.dart';
 import 'package:other_screens/presentation/learning/widgets/true_or_false.dart';
 import 'package:other_screens/presentation/learning/widgets/validate_button.dart';
 import 'package:other_screens/presentation/learning/widgets/word_question_widget.dart';
+import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:other_screens/presentation/main/widgets/countdown_timer.dart';
+import 'package:other_screens/presentation/pricing/pages/pricing_page.dart';
+import 'package:other_screens/presentation/pricing/widgets/alert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum QuestionType { fillBlank, trueOrFalse, multipleChoice, wordBuilding }
 
@@ -22,11 +31,13 @@ Logger _log = Logger("question_page.dart");
 class QuestionPage extends StatefulWidget {
   final String levelImage;
   final String levelName;
+  final String categoryName;
 
   const QuestionPage({
     super.key,
     required this.levelImage,
     required this.levelName,
+    required this.categoryName,
   });
 
   @override
@@ -35,42 +46,61 @@ class QuestionPage extends StatefulWidget {
 
 class _QuestionPageState extends State<QuestionPage> {
   late QuestionState _state;
+  late LearningStatsService _statsService;
   bool? _showOverlay;
   bool? _isCorrect;
 
   @override
   void initState() {
+    _initializeStats();
+    // Filter questions by category
+    List<Question> categoryQuestions = allQuestions
+        .where((question) =>
+            question.category?.toLowerCase() ==
+            widget.categoryName.toLowerCase())
+        .toList();
+
+    // If no questions found for category, fallback to all questions
+    if (categoryQuestions.isEmpty) {
+      _log.warning('No questions found for category: ${widget.categoryName}');
+      categoryQuestions = allQuestions;
+    }
+
+    // Shuffle the filtered questions
+    categoryQuestions.shuffle(Random(42));
+
     super.initState();
-    // Initialize with sample questions (you'll fetch these from your data source)
+    // Initialize with sample questions (will fetch these from data source)
     _state = QuestionState(
       currentIndex: 0,
-      questions: [
-        ...trueOrFalseQuestionList,
-        WordBuildingQuestion(
-          title: 'School',
-          instruction: 'Build the word using the syllables',
-          targetWord: 'graduation',
-          availableSyllables: ['grad', 'u', 'a', 'tion'],
-        ),
-        ...wordBuildingQuestionList,
-        FillInBlankQuestion(
-          correctAnswer: "pluie",
-          sentence:
-              "aujourd'hui il fait un mauvait temps car il semble que la ___ tombera.",
-          title: 'Climate',
-          instruction: 'Fill in the blank',
-        ),
-        TrueOrFalseQuestion(
-          word: "Appa'a",
-          imageUrl: "assets/icons/mock-data/papa.png",
-          correctAnswer: false,
-        ),
-      ],
+      questions: categoryQuestions,
       answers: [],
     );
   }
 
-  void _handleAnswer(bool isCorrect) {
+  Future<void> _initializeStats() async {
+    final prefs = await SharedPreferences.getInstance();
+    _statsService = LearningStatsService(prefs);
+  }
+
+  void _handleAnswer(bool isCorrect) async {
+    final currentQuestion = _state.questions[_state.currentIndex];
+
+    // Track the word/phrase that was learned
+    String wordLearned = '';
+    if (currentQuestion is WordBuildingQuestion) {
+      wordLearned = currentQuestion.targetWord;
+    } else if (currentQuestion is FillInBlankQuestion) {
+      wordLearned = currentQuestion.missingWord;
+    } else if (currentQuestion is TrueOrFalseQuestion) {
+      wordLearned = currentQuestion.word;
+    }
+
+    // Add to learned words if not empty
+    if (isCorrect && wordLearned.isNotEmpty) {
+      await _statsService.addLearnedWord(wordLearned);
+    }
+
     setState(() {
       _showOverlay = true;
       _isCorrect = isCorrect;
@@ -117,10 +147,12 @@ class _QuestionPageState extends State<QuestionPage> {
 
     if (question is WordBuildingQuestion) {
       return WordBuildingQuestionWidget(
-        question: question as WordBuildingQuestion,
+        imagePath: question.imagePath,
+        question: question,
+        icon: question.icon,
         onAnswer: (answer) {
-          _handleAnswer(answer.toLowerCase() ==
-              (question as WordBuildingQuestion).targetWord.toLowerCase());
+          _handleAnswer(
+              answer.toLowerCase() == (question).targetWord.toLowerCase());
         },
       );
     }
@@ -128,6 +160,7 @@ class _QuestionPageState extends State<QuestionPage> {
     if (question is FillInBlankQuestion) {
       String userInput = ""; // Track the user's input
 
+      final controller = TextEditingController();
       return StatefulBuilder(
         builder: (context, setState) {
           return Column(
@@ -152,8 +185,10 @@ class _QuestionPageState extends State<QuestionPage> {
                   });
                 },
                 firstPartOfSentence:
-                    "Aujourd'hui il fait un mauvait temps car il semble que la ",
-                secondPartOfSentence: "tombera.",
+                    splitSentenceAtBlank(question.sentence).firstPart,
+                secondPartOfSentence:
+                    splitSentenceAtBlank(question.sentence).secondPart,
+                controller: controller,
               ),
               Spacer(),
               ValidateButton(
@@ -164,8 +199,9 @@ class _QuestionPageState extends State<QuestionPage> {
                     ? () {
                         _handleAnswer(
                           userInput.toLowerCase() ==
-                              question.correctAnswer.toLowerCase(),
+                              question.missingWord.toLowerCase(),
                         );
+                        controller.clear();
                       }
                     : null, // No action if input is empty
               ),
@@ -226,7 +262,7 @@ class _QuestionPageState extends State<QuestionPage> {
         },
       );
     }
-
+    _log.info(question.toString());
     return const Center(child: Text('Unsupported question type'));
   }
 
@@ -241,16 +277,84 @@ class _QuestionPageState extends State<QuestionPage> {
           padding: const EdgeInsets.all(8.0),
           child: Hero(
             tag: widget.levelName,
-            child: Image.asset(
-              widget.levelImage,
-              width: mediaWidth(context) / 4.6,
+            child: GestureDetector(
+              onTap: () {
+                showDefaultDialog(
+                  context: context,
+                  title: "Leave Level?",
+                  message:
+                      "You will lose all your progress in this level if you continue.",
+                  icon: Icons.warning_rounded,
+                  backgroundColor: seedColor,
+                  actions: [
+                    TextButton(
+                      onPressed: () =>
+                          Navigator.pop(context, true), // Pop dialog with true
+                      child: Text(
+                        "I Agree",
+                        style: TextStyle(
+                          color: seedColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(
+                          context, false), // Pop dialog with false
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ).then((confirmed) {
+                  if (confirmed == true) {
+                    Navigator.pop(context); // Pop the question page
+                  }
+                });
+              },
+              child: Image.asset(
+                widget.levelImage,
+                width: mediaWidth(context) / 4.6,
+              ),
             ),
           ),
         ),
         centerTitle: true,
         title: Text(widget.levelName),
         actions: [
-          CountdownTimer(),
+          CountdownTimer(
+            onTimeUp: () => showDefaultDialog(
+                context: context,
+                title: "Time's Up!",
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      AppNavigator.push(context, PremiumPage());
+                    },
+                    child: Text("Upgrade Now"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      //TODO: When clicking here redirect to stats page first.
+                      AppNavigator.pushReplacement(context, TimeUpStatsPage());
+                    },
+                    child: Text(
+                      "Maybe Later",
+                      style: TextStyle(color: seedColorPalette.shade700),
+                    ),
+                  ),
+                ],
+                message:
+                    "Your free daily learning time has expired. Upgrade to premium to enjoy unlimited learning time!",
+                backgroundColor: seedColor,
+                content: Text(
+                  "Your free daily learning time has expired. Upgrade to premium to enjoy unlimited learning time!",
+                )),
+          ),
           SizedBox(width: mediaWidth(context) / 16),
         ],
       ),

@@ -7,6 +7,7 @@ import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/widgets/custom_button.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
 import 'package:other_screens/presentation/onboarding/pages/daily_goal_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 Logger _log = Logger('GoalPage.dart');
@@ -23,11 +24,17 @@ class GoalsPage extends StatefulWidget {
 class _GoalsPageState extends State<GoalsPage> {
   String? selectedGoal;
 
-  void updateSelectedGoal(String goal) {
+  Future<void> _completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('has_completed_onboarding', true);
+  }
+
+  void updateSelectedGoal(String goal) async {
     _log.info("Selecting goal $selectedGoal");
     setState(() {
       selectedGoal = goal;
     });
+     await _completeOnboarding();
   }
 
   @override

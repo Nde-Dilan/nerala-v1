@@ -13,13 +13,14 @@ class FillBlankQuestionWidget extends StatelessWidget {
   final String firstPartOfSentence;
   final String secondPartOfSentence;
   final ValueChanged<String> onTextChanged;
+  final TextEditingController controller; 
 
-  const FillBlankQuestionWidget(
+    const FillBlankQuestionWidget(
       {super.key,
       required this.question,
       required this.onTextChanged,
       required this.firstPartOfSentence,
-      required this.secondPartOfSentence});
+      required this.secondPartOfSentence, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,11 @@ class FillBlankQuestionWidget extends StatelessWidget {
         children: [
           (question.imageUrl != null)
               ? Image(image: NetworkImage(question.imageUrl!))
-              : Image.asset("assets/icons/mock-data/pluie.png"),
+              : Image.asset(
+                  question.assetImage!,
+                  width: mediaWidth(context) * 0.65,
+                  height: mediaWidth(context) * 0.65,
+                ),
           SizedBox(
             height: mediaWidth(context) / 8,
           ),
@@ -46,6 +51,7 @@ class FillBlankQuestionWidget extends StatelessWidget {
                     child: SizedBox(
                       width: mediaWidth(context) / 6,
                       child: TextField(
+                         controller: controller,
                         textAlign: TextAlign.center,
                         onChanged: onTextChanged,
                         decoration: InputDecoration(

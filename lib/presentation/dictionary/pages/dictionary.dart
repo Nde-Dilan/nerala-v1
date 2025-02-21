@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:logging/logging.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/models/main/dictionary_model.dart';
+import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:pie_menu/pie_menu.dart';
 import '../widgets/dictionary_card.dart';
+import '../widgets/phrase_card.dart';
 
 Logger _log = Logger("dictionary_page");
 
@@ -39,7 +42,11 @@ class _DictionaryPageState extends State<DictionaryPage>
         appBar: AppBar(
           backgroundColor: scaffoldBgColor,
           centerTitle: true,
-          leading: const BackButton(),
+          leading: BackButton(
+            onPressed: () {
+              AppNavigator.pushReplacement(context, HomePage());
+            },
+          ),
           title: const Text(
             "My dictionary",
             style: TextStyle(fontSize: 20),
@@ -111,10 +118,10 @@ class _DictionaryPageState extends State<DictionaryPage>
                   ),
                   // Phrases Tab
                   ListView.builder(
-                    itemCount: DictionaryEntry.sampleEntries.length,
+                    itemCount: DictionaryEntry.samplePhrases.length,
                     itemBuilder: (context, index) {
-                      return DictionaryCard(
-                        entry: DictionaryEntry.sampleEntries[index],
+                      return PhraseCard(
+                        entry: DictionaryEntry.samplePhrases[index],
                       );
                     },
                   ),

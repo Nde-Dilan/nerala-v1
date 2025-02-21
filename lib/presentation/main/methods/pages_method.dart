@@ -2,14 +2,17 @@ import "package:carousel_slider/carousel_slider.dart";
 
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
-import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
+import 'package:other_screens/data/stories/stories.dart';
+import 'package:other_screens/domain/auth/repository/stories_repository.dart';
 import 'package:other_screens/presentation/annecdotes/pages/annecdote_page.dart';
 import 'package:other_screens/presentation/learning/pages/home_category.dart';
-import 'package:other_screens/presentation/main/widgets/stats_card.dart';
-import 'package:other_screens/presentation/pricing/pages/pricing_page.dart';
+
+final storyRepo = StoriesRepositoryImpl();
+
+const basePath = "assets/storyAssets/";
 
 String formatUsername(String username) {
   if (username.isEmpty) return '';
@@ -26,49 +29,14 @@ String formatUsername(String username) {
 }
 
 Widget buildHeader(LearningStats stats, String username, BuildContext context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // CountdownTimer(),
-          GestureDetector(
-              onTap: () {
-                AppNavigator.push(context, PremiumPage());
-              },
-              child: Image.asset("assets/icons/pricing/crown.png")),
-          const Text(
-            'Hi,',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Text(
-            formatUsername(username),
-            style: TextStyle(
-                fontSize: 28, fontWeight: FontWeight.bold, color: seedColor),
-          ),
-          const Text(
-            'Olia ?',
-            style: TextStyle(
-              fontSize: 20,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
-      ),
-      StatsCard(stats: stats),
-    ],
-  );
+  return Text("");
 }
 
 Widget buildCarousel(List<FunFact> funFacts) {
   return CarouselSlider.builder(
-    itemCount: funFacts.length,
+    itemCount: storiesList.length,
     itemBuilder: (context, index, realIndex) {
-      return buildCarouselItem(funFacts[index],context);
+      return buildCarouselItem(index, context);
     },
     options: CarouselOptions(
       height: 200,
@@ -79,7 +47,11 @@ Widget buildCarousel(List<FunFact> funFacts) {
   );
 }
 
-Widget buildCarouselItem(FunFact funFact,BuildContext context) {
+Widget buildCarouselItem(int index, BuildContext context) {
+  // Get story data with type safety
+  final Map<String, dynamic> story =
+      Map<String, dynamic>.from(storiesList[index]);
+
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 8.0),
     decoration: BoxDecoration(
@@ -87,36 +59,42 @@ Widget buildCarouselItem(FunFact funFact,BuildContext context) {
       borderRadius: BorderRadius.circular(16),
     ),
     child: GestureDetector(
-      onTap: (){
-         final anecdote = Anecdote(
-                    title: 'Le Lièvre et la Tortue : Une Fable Nouvelle',
-                    subtitle: 'Une Fable Nouvelle',
-                    content:
-                        'Dans une forêt dense où le soleil jouait avec les feuilles...',
-                    coverImage: 'assets/images/cover.png',
-                    thumbnailImage: 'assets/images/thumbnail.png',
-                    category: 'Family members',
-                  );
-                  // Navigate to "LOG IN" screen
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AnecdoteDetailScreen(
-                                anecdote: anecdote,
-                              )));
+      onTap: () async {
+        final stories = await storyRepo.getStories();
+        final anecdote = stories[index];
+
+        // Safely access values with null checks and type casting
+        final String thumbnailUrl = story['thumbnailUrl']?.toString() ?? '';
+        final String imageUrl = story['imageUrl']?.toString() ?? '';
+
+        // Update anecdote properties
+        anecdote.coverImage = basePath + thumbnailUrl;
+        anecdote.thumbnailImage = basePath + thumbnailUrl;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AnecdoteDetailScreen(anecdote: anecdote),
+          ),
+        );
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            funFact.imagePath,
+            basePath + (story['imageUrl']?.toString() ?? ''),
             height: 100,
           ),
           const SizedBox(height: 8),
-          Text(
-            funFact.description,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.body,
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              story['body']!.toString().length > 140
+                  ? '${story['body']?.toString().substring(0, 50)}...'
+                  : story['body']?.toString() ?? '',
+              textAlign: TextAlign.left,
+              style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -149,7 +127,10 @@ Widget buildCategoryItem(Category category, BuildContext context) {
           context,
           MaterialPageRoute(
               builder: (contex) => CategoryPage(
-                    categoryName: category.title, quoteText: category.quoteText, categoryImage: category.imagePath, levels: category.numberOfLevels,
+                    categoryName: category.title,
+                    quoteText: category.quoteText,
+                    categoryImage: category.imagePath,
+                    levels: category.numberOfLevels,
                   )));
     },
     child: Column(

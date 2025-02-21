@@ -31,6 +31,7 @@ class TrueOrFalseWidget extends StatelessWidget {
               ? (Image.asset(
                   wordImage!,
                   width: mediaWidth(context) * 0.65,
+                  height: mediaWidth(context) * 0.65,
                 ))
               : (iconImage != null ? (Icon(iconImage)) : Text("")),
           SizedBox(

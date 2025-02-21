@@ -9,10 +9,12 @@ class LevelItem extends StatefulWidget {
   const LevelItem(
       {super.key,
       required this.levelName,
+      required this.categoryName,
       required this.levelImage,
       required this.isPremium});
 
   final String levelName;
+  final String categoryName;
   final String levelImage;
   final bool isPremium;
 
@@ -61,40 +63,62 @@ class _LevelItemState extends State<LevelItem> {
                           },
                           child: Image.asset("assets/icons/pricing/crown.png"),
                         ),
+                        const SizedBox(width: 8),
                         Text(
                           widget.levelName,
-                          style: AppTextStyles.h2.copyWith(color: white),
+                          style: AppTextStyles.h3.copyWith(
+                            color: white,
+                          ),
                         )
                       ],
                     )
                   : Text(
                       widget.levelName,
-                      style: AppTextStyles.h2.copyWith(color: white),
+                      style: AppTextStyles.h3.copyWith(color: white),
                     ),
               TextButton(
                   style: ButtonStyle(
                       fixedSize: WidgetStatePropertyAll<Size>(Size(
                           mediaWidth(context) / 3.6, mediaWidth(context) / 12)),
                       backgroundColor: WidgetStatePropertyAll(darkColor)),
-                  onPressed: () {},
+                  onPressed: () {
+                    //DUPLICATE
+                    widget.isPremium
+                        ? PremiumPage()
+                        : AppNavigator.pushReplacement(
+                            context,
+                            QuestionPage(
+                                levelImage: widget.levelImage,
+                                levelName: widget.levelName, categoryName: widget.categoryName,));
+                  },
                   child: GestureDetector(
                     onTap: () {
-
-                      widget.isPremium ? PremiumPage() :
-                      AppNavigator.pushReplacement(
-                          context,
-                          QuestionPage(
-                              levelImage: widget.levelImage,
-                              levelName: widget.levelName)) ;
+                      widget.isPremium
+                          ? PremiumPage()
+                          : AppNavigator.pushReplacement(
+                              context,
+                              QuestionPage(
+                                  levelImage: widget.levelImage,
+                                  levelName: widget.levelName, categoryName: widget.categoryName,));
                     },
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisSize: MainAxisSize.min, // Add this
+                      mainAxisAlignment:
+                          MainAxisAlignment.center, // Change to center
                       children: [
                         Text(
                           "View",
                           style: AppTextStyles.h4.copyWith(color: white),
                         ),
-                        Image.asset("assets/icons/category-page/play.png")
+                        const SizedBox(width: 8), // Add spacing
+
+                        SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Image.asset(
+                              "assets/icons/category-page/play.png",
+                              fit: BoxFit.contain,
+                            ))
                       ],
                     ),
                   ))

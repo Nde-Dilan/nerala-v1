@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
 
 class CountdownTimer extends StatefulWidget {
-  const CountdownTimer({super.key});
+   final VoidCallback? onTimeUp;
+  const CountdownTimer({super.key,   this.onTimeUp,});
 
   @override
   State<CountdownTimer> createState() => _CountdownTimerState();
 }
 
 class _CountdownTimerState extends State<CountdownTimer> {
-  static const int _totalSeconds = 300; // 5 minutes
+  static const int _totalSeconds = freeTime; // 5 minutes
   late Timer _timer;
   int _seconds = _totalSeconds;
 
@@ -27,6 +28,8 @@ class _CountdownTimerState extends State<CountdownTimer> {
           _seconds--;
         } else {
           _timer.cancel();
+          widget.onTimeUp?.call();
+        
         }
       });
     });

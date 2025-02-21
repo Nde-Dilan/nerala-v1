@@ -12,7 +12,7 @@ import 'package:other_screens/common/widgets/dialogs/erro_dialog.dart';
 import 'package:other_screens/common/widgets/forms/password_text_formfield.dart';
 import 'package:other_screens/common/widgets/forms/simple_text_formfield.dart';
 import 'package:other_screens/data/auth/models/user_signin_req.dart';
-import 'package:other_screens/domain/auth/usecases/google_login.dart';
+import 'package:other_screens/domain/auth/usecases/google_register.dart';
 import 'package:other_screens/domain/auth/usecases/no_params.dart';
 import 'package:other_screens/domain/auth/usecases/signin.dart';
 import 'package:other_screens/presentation/auth/pages/register_page.dart';
@@ -280,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
                         return GestureDetector(
                           onTap: () {
                             context.read<ButtonStateCubit>().execute(
-                                usecase: LoginWithGoogleUseCase(),
+                                usecase: SignupWithGoogleUseCase(),
                                 params: NoParams());
                           },
                           child: Image.asset("assets/icons/google.png"),

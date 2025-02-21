@@ -1,7 +1,7 @@
-
 // widgets/anecdote_header.dart
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/presentation/annecdotes/widgets/translated_text.dart';
 
 class AnecdoteHeader extends StatelessWidget {
   final String coverImage;
@@ -56,13 +56,15 @@ class AnecdoteContent extends StatelessWidget {
   final String title;
   final String subtitle;
   final String content;
+  final Map<String, String> keywords;
 
   const AnecdoteContent({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     required this.content,
-  }) : super(key: key);
+    required this.keywords,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -86,12 +88,9 @@ class AnecdoteContent extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: 16),
-          Text(
-            content,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  height: 1.6,
-                  letterSpacing: 0.3,
-                ),
+          TranslatedText(
+            text: content,
+            translations: keywords, // Add keywords field to Anecdote model
           ),
         ],
       ),

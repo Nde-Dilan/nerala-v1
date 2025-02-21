@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
+import 'package:other_screens/common/loading_builder.dart';
+import 'package:other_screens/data/models/main/learning_stats.dart';
+import 'package:other_screens/presentation/learning/services/learning_stats_service.dart';
+import 'package:other_screens/presentation/main/pages/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Models
 class AchievementStats {
@@ -13,7 +19,7 @@ class AchievementStats {
 }
 
 // Main Screen
-class CongratsPage extends StatelessWidget {
+class CongratsPage extends StatefulWidget {
   final AchievementStats stats;
 
   const CongratsPage({
@@ -22,42 +28,73 @@ class CongratsPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final AchievementStats effectiveStats =
-        stats ?? AchievementStats(wordsLearned: 15, completionPercentage: 100);
+  State<CongratsPage> createState() => _CongratsPageState();
+}
 
-    return Scaffold(
-      backgroundColor: scaffoldBgColor,
-      appBar: AppBar(
-        backgroundColor: scaffoldBgColor,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text("Congratulation!"),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: ListView(
-            // spacing: 40,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CongratsHeader(),
-              const SizedBox(
-                height: 40,
+class _CongratsPageState extends State<CongratsPage> {
+  late Future<LearningStats> _statsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStats();
+  }
+
+  void _loadStats() async {
+    final prefs = await SharedPreferences.getInstance();
+    final statsService = LearningStatsService(prefs);
+    _statsFuture = statsService.getStats();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final AchievementStats effectiveStats = widget.stats ??
+        AchievementStats(wordsLearned: 15, completionPercentage: 100);
+
+    return FutureBuilder<LearningStats>(
+      future: _statsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final stats = snapshot.data!;
+          return Scaffold(
+            backgroundColor: scaffoldBgColor,
+            appBar: AppBar(
+              backgroundColor: scaffoldBgColor,
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+              title: Text("Congratulation!"),
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: ListView(
+                  // spacing: 40,
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CongratsHeader(),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    TrophyImage(),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    StatsSection(stats: stats),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    DoneButton(
+                        onPressed: () =>
+                            AppNavigator.push(context, HomePage())),
+                  ],
+                ),
               ),
-              TrophyImage(),
-              const SizedBox(
-                height: 40,
-              ),
-              StatsSection(stats: effectiveStats),
-              const SizedBox(
-                height: 40,
-              ),
-              DoneButton(onPressed: () => Navigator.of(context).pop()),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+          // Your existing congrats page UI with real stats
+        }
+        return const DefaultLoadingBuilder();
+      },
     );
   }
 }
@@ -101,7 +138,7 @@ class TrophyImage extends StatelessWidget {
 }
 
 class StatsSection extends StatelessWidget {
-  final AchievementStats stats;
+  final LearningStats stats;
 
   const StatsSection({super.key, required this.stats});
 
@@ -112,12 +149,12 @@ class StatsSection extends StatelessWidget {
       children: [
         StatCard(
           label: 'Words',
-          value: '${stats.wordsLearned}+',
+          value: '${stats.totalWordsLearned}+',
           borderColor: warningColor,
         ),
         StatCard(
           label: 'Completion',
-          value: '${stats.completionPercentage.toStringAsFixed(0)}%',
+          value: '${stats.totalWordsLearned.toStringAsFixed(0)}%',
           borderColor: seedColor,
         ),
       ],
