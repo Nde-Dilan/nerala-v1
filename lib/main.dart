@@ -10,7 +10,7 @@ import 'package:other_screens/presentation/chat/chat_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:other_screens/firebase_options.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
-import 'package:other_screens/presentation/pages/landing_page.dart';
+import 'package:other_screens/presentation/pages/landing_page.dart'; 
 import 'package:other_screens/service_locator.dart';
 
 //logging
@@ -29,6 +29,7 @@ void main() async {
 
     // Configure logging
     if (kDebugMode) {
+      
       Logger.root.level = Level.FINE;
     }
 

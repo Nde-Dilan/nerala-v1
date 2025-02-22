@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SignupWithGoogleUseCase implements UseCase<Either, NoParams> {
   @override
   Future<Either> call({NoParams? params}) async {
-    final result = await sl<AuthRepository>().loginWithGoogle();
+    final result = await sl<AuthRepository>().signupWithGoogle();
 
     if (result.isRight()) {
       // Set onboarding flag for new users

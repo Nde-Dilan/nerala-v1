@@ -2,13 +2,17 @@ import "package:carousel_slider/carousel_slider.dart";
 
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:other_screens/data/auth/repository/auth_repository_impl.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
 import 'package:other_screens/data/stories/stories.dart';
+import 'package:other_screens/domain/auth/entities/user_entity.dart';
 import 'package:other_screens/domain/auth/repository/stories_repository.dart';
 import 'package:other_screens/presentation/annecdotes/pages/annecdote_page.dart';
 import 'package:other_screens/presentation/learning/pages/home_category.dart';
+import 'package:other_screens/presentation/main/pages/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final storyRepo = StoriesRepositoryImpl();
 
@@ -113,16 +117,16 @@ Widget buildCategoriesGrid(List<Category> categories) {
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
-        return buildCategoryItem(categories[index], context);
+        return buildCategoryItem(categories[index], context,true);
       },
     ),
   );
 }
 
-Widget buildCategoryItem(Category category, BuildContext context) {
+Widget buildCategoryItem(Category category, BuildContext context,mounted) {
   return GestureDetector(
     // onTap: () => Navigator.pushNamed(context, category.route),
-    onTap: () {
+    onTap: () async {    
       Navigator.push(
           context,
           MaterialPageRoute(

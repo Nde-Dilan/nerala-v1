@@ -16,6 +16,7 @@ import 'package:other_screens/presentation/auth/pages/login_page.dart';
 import 'package:other_screens/presentation/auth/utils/auth_methods.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:other_screens/presentation/onboarding/pages/goal_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Logger _log = Logger('RegistrationPage.dart');
 
@@ -264,11 +265,14 @@ class _RegisterPageState extends State<RegisterPage> {
                       return BlocListener<ButtonStateCubit, ButtonState>(
                         listener: (context, state) {
                           // TODO: implement listener
-
-                          
                         },
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            // Set onboarding flag for new users
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool(
+                                'is_google_user', true);
+                            if (!mounted) return;
                             context.read<ButtonStateCubit>().execute(
                                 usecase: SignupWithGoogleUseCase(),
                                 params: NoParams());

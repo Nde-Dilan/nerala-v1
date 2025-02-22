@@ -118,21 +118,12 @@ const double fontSize = 18;
 final optionList = [
   {
     "name": "Edit Personal Details",
-    "onTap": "",
+    "onTap": "detail",
     "style": const TextStyle(
         fontSize: fontSize,
         fontWeight: FontWeight.w600,
         color: Color(0xff000000)),
     "icon": Icons.person_outline,
-  },
-  {
-    "name": "Payment Method",
-    "onTap": "/home/payment",
-    "style": const TextStyle(
-        fontSize: fontSize,
-        fontWeight: FontWeight.w600,
-        color: Color(0xff000000)),
-    "icon": Icons.payment,
   },
   {
     "name": "Appearance",
@@ -160,6 +151,15 @@ final optionList = [
         fontWeight: FontWeight.w600,
         color: Color(0xff000000)),
     "icon": Icons.help_center,
+  },
+  {
+    "name": "About",
+    "onTap": "/home/payment",
+    "style": const TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.w600,
+        color: Color(0xff000000)),
+    "icon": Icons.info,
   },
   {
     "name": "Logout",

@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
@@ -8,101 +10,15 @@ import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/loading_builder.dart';
 import 'package:other_screens/common/widgets/dialogs/erro_dialog.dart';
 import 'package:other_screens/data/auth/models/user_creation_req.dart';
+import 'package:other_screens/data/models/onboarding/language_model.dart';
+import 'package:other_screens/data/onboarding/language_repository.dart';
 import 'package:other_screens/domain/auth/usecases/siginup.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
+import 'package:other_screens/presentation/onboarding/widgets/language_card.dart';
+import 'package:other_screens/presentation/onboarding/widgets/next_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Logger _log = Logger('LanguagePage.dart');
-
-// Data model for language
-class Language {
-  final String name;
-  final String region;
-  final String flagEmoji;
-  final String description;
-
-  const Language({
-    required this.name,
-    required this.region,
-    required this.description,
-    this.flagEmoji = '🌍', // Default flag emoji
-  });
-}
-
-// Repository of languages
-class LanguageRepository {
-  static const List<Language> languages = [
-    Language(
-      name: 'Ghomala',
-      region: 'West Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Ghomala is a Grassfields Bantu language spoken in the West Region of Cameroon. It is primarily used by the Bamileke people and has around 350,000 speakers.',
-    ),
-    Language(
-      name: 'Ewondo',
-      region: 'Centre Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Ewondo is a Bantu language spoken in the Centre Region of Cameroon. It is the native language of the Ewondo people and is one of the official languages of Cameroon.',
-    ),
-    Language(
-      name: 'Bulu',
-      region: 'South Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Bulu is a Bantu language spoken in the South Region of Cameroon. It is the native language of the Bulu people and is one of the official languages of Cameroon.',
-    ),
-    Language(
-      name: 'Duala',
-      region: 'Littoral Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Duala is a Bantu language spoken in the Littoral Region of Cameroon. It is the native language of the Duala people and is one of the official languages of Cameroon.',
-    ),
-    Language(
-      name: 'Fulfulde',
-      region: 'Adamawa, North, and Far North Regions',
-      flagEmoji: '🇨🇲',
-      description:
-          'Fulfulde is a Niger-Congo language spoken in several countries, including Cameroon. It is the native language of the Fulbe people and is one of the official languages of Cameroon.',
-    ),
-    Language(
-      name: 'Bamiléké',
-      region: 'West Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Bamiléké is a collective term for several closely related Bantu languages spoken in the West Region of Cameroon. It is the native language of the Bamiléké people.',
-    ),
-    Language(
-      name: 'Fang',
-      region: 'South Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Fang is a Bantu language spoken in several countries, including Cameroon. It is the native language of the Fang people.',
-    ),
-    Language(
-      name: 'Mbum',
-      region: 'Adamawa Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Mbum is a Bantu language spoken in the Adamawa Region of Cameroon. It is the native language of the Mbum people.',
-    ),
-    Language(
-      name: 'Ngemba',
-      region: 'North-West Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Ngemba is a Grassfields Bantu language spoken in the North-West Region of Cameroon. It is the native language of the Ngemba people.',
-    ),
-    Language(
-      name: 'Tikar',
-      region: 'North Region',
-      flagEmoji: '🇨🇲',
-      description:
-          'Tikar is a Bantu language spoken in the North Region of Cameroon. It is the native language of the Tikar people.',
-    ),
-  ];
-}
 
 class LanguageSelectionPage extends StatefulWidget {
   const LanguageSelectionPage({super.key, required this.userCreationReq});
@@ -115,6 +31,20 @@ class LanguageSelectionPage extends StatefulWidget {
 
 class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   Language? _selectedLanguage;
+  bool isGoogleUser = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserFlow();
+  }
+
+  Future<void> _checkUserFlow() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isGoogleUser = prefs.getBool('is_google_user') ?? false;
+    });
+  }
 
   void _selectLanguage(Language language) {
     setState(() {
@@ -224,16 +154,48 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                         },
                         child: NextButton(
                           isEnabled: _selectedLanguage != null,
-                          onPressed: () {
-                            if (_selectedLanguage != null) {
-                              // Handle navigation to next screen
-                              _log.info("Selected : $_selectedLanguage");
+                          onPressed: () async {
+                            if (_selectedLanguage == null) return;
 
+                            if (isGoogleUser) {
+                              // Update Firestore user document with selected language
+                              try {
+                                final firestore = FirebaseFirestore.instance;
+                                final user = FirebaseAuth.instance.currentUser;
+
+                                if (user != null) {
+                                  
+                                  await firestore
+                                      .collection('users')
+                                      .doc(user.uid)
+                                      .update({
+                                    'learningLanguage': _selectedLanguage?.name,
+                                  });
+
+                                  // Mark onboarding as completed
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setBool(
+                                      'has_completed_onboarding', true);
+
+                                  if (mounted) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => HomePage()));
+                                  }
+                                }
+                              } catch (e) {
+                                _log.severe('Error updating user language: $e');
+                                if (mounted) {
+                                  showErrorDialog(context, "Update Error",
+                                      "Failed to update language preference");
+                                }
+                              }
+                            } else {
+                              // Normal signup flow
                               widget.userCreationReq.learningLanguage =
                                   _selectedLanguage?.name;
-
-                              _log.info(
-                                  "Creating a user with mail : ${widget.userCreationReq.email}");
                               context.read<ButtonStateCubit>().execute(
                                   usecase: SignupUseCase(),
                                   params: widget.userCreationReq);
@@ -248,121 +210,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
             ),
           ]);
         },
-      ),
-    );
-  }
-}
-
-class LanguageCard extends StatelessWidget {
-  final Language language;
-  final bool isSelected;
-  final VoidCallback onSelect;
-  final VoidCallback onInfoTap;
-
-  const LanguageCard({
-    super.key,
-    required this.language,
-    required this.isSelected,
-    required this.onSelect,
-    required this.onInfoTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onSelect,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.black12,
-            width: 1,
-          ),
-          color:
-              isSelected ? Colors.black.withValues(alpha: 0.05) : Colors.white,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.red,
-                child: Text(
-                  language.flagEmoji,
-                  style: const TextStyle(fontSize: 24),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      language.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      language.region,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: onInfoTap,
-                icon: const CircleAvatar(
-                  backgroundColor: Colors.black12,
-                  child: Icon(
-                    Icons.question_mark,
-                    color: Colors.black54,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class NextButton extends StatelessWidget {
-  final bool isEnabled;
-  final VoidCallback? onPressed;
-
-  const NextButton({
-    super.key,
-    required this.isEnabled,
-    this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isEnabled ? onPressed : null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        //disabledBackgroundColor: Colors.grey,
-      ),
-      child: const Text(
-        'NEXT',
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
       ),
     );
   }

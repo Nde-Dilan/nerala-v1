@@ -18,6 +18,7 @@ import 'package:other_screens/domain/auth/usecases/signin.dart';
 import 'package:other_screens/presentation/auth/pages/register_page.dart';
 import 'package:other_screens/presentation/auth/utils/auth_methods.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Logger _log = Logger("login_pqge.dqrt");
 
@@ -41,6 +42,8 @@ class _LoginPageState extends State<LoginPage> {
 
   String? password;
 
+  SharedPreferences? prefs;
+
   // Form validation
   bool isEmailFilled = false;
 
@@ -48,9 +51,14 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isPasswordFilled = false;
 
+  void initializePrefs() async {
+      prefs = await SharedPreferences.getInstance();
+  }
+
   @override
   void initState() {
     super.initState();
+    initializePrefs();
     _emailController.addListener(() {
       setState(() {
         isEmailFilled = _emailController.text.isNotEmpty;
@@ -213,6 +221,11 @@ class _LoginPageState extends State<LoginPage> {
                                               usecase: SigninUseCase(),
                                               params: signinReq);
 
+                                      // Mark onboarding as completed
+
+                                      prefs!.setBool(
+                                          'has_completed_onboarding', true);
+
                                       // debugPrint(i);
                                       // if(state)
                                     }
@@ -263,6 +276,7 @@ class _LoginPageState extends State<LoginPage> {
                       _log.info(
                           "Error while trying to use google auth: ${state.errorMessage}");
                     } else if (state is ButtonSuccessState) {
+                      prefs!.setBool('has_completed_onboarding', true);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => HomePage()));
                     }

@@ -50,63 +50,10 @@ class _HomePageState extends State<HomePage>
       vsync: this,
     );
 
-    // Check onboarding status after widget is built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // _checkOnboardingStatus();
-    });
+    
   }
 
-  void _checkOnboardingStatus(UserEntity user) async {
-    final prefs = await SharedPreferences.getInstance();
-    final hasCompletedOnboarding =
-        prefs.getBool('has_completed_onboarding') ?? false;
-
-    if (!hasCompletedOnboarding) {
-      if (mounted) {
-        showDefaultDialog(
-          context: context,
-          title: "Complete Your Profile",
-          message:
-              "Hey! 👋 To get the most out of your learning experience, let's set up your goals and preferences.",
-          backgroundColor: seedColor,
-          icon: Icons.person_outline,
-          actions: [
-       TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        AppNavigator.push(
-                          context,
-                          GoalsPage(
-                            userCreationReq: UserCreationReq()
-                              ..email = user.email
-                              ..firstName = user.firstName,
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Let's Go!",
-                        style: TextStyle(
-                          color: seedColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    
-                
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                "Maybe Later",
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-          ],
-        );
-      }
-    }
-  }
+  
 
   @override
   void dispose() {
@@ -235,21 +182,72 @@ class HomeWidget extends StatefulWidget {
   State<HomeWidget> createState() => _HomeWidgetState();
 }
 
+
+  void checkOnboardingStatus(UserEntity user,BuildContext context, bool mounted) async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasCompletedOnboarding =
+        prefs.getBool('has_completed_onboarding') ?? false;
+
+    if (!hasCompletedOnboarding) {
+      if (mounted) {
+        showDefaultDialog(
+          context: context,
+          title: "Complete Your Profile",
+          message:
+              "Hey! 👋 To get the most out of your learning experience, let's set up your goals and preferences.",
+          backgroundColor: seedColor,
+          icon: Icons.person_outline,
+          actions: [
+       TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        AppNavigator.push(
+                          context,
+                          GoalsPage(
+                            userCreationReq: UserCreationReq()
+                              ..email = user.email
+                              ..firstName = user.firstName,
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Let's Go!",
+                        style: TextStyle(
+                          color: seedColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    
+                
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Maybe Later",
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+    }
+  }
+
 class _HomeWidgetState extends State<HomeWidget> {
-  final GlobalKey _two = GlobalKey();
-  final GlobalKey _three = GlobalKey();
-  final GlobalKey _four = GlobalKey();
+   
 
   @override
   void initState() {
     super.initState();
 
-    //Start showcase view after current widget frames are drawn.
-    // WidgetsBinding.instance.addPostFrameCallback(
-    //   (_) => ShowCaseWidget.of(context)
-    //       .startShowCase([_firstShowcaseKey, _two, _three]),
-    // );
+   // Check onboarding status after widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkOnboardingStatus(widget.state.user,context,mounted);
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {

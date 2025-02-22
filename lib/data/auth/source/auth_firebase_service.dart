@@ -55,6 +55,8 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         message = 'The password provided is too weak';
       } else if (e.code == 'email-already-in-use') {
         message = 'An account already exists with that email.';
+      } else {
+        message = "A network error has occurred. \n Please try again!";
       }
       return Left(message);
     }
