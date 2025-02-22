@@ -9,8 +9,10 @@ import 'package:other_screens/presentation/chat/chat_page.dart';
 //firebase
 import 'package:firebase_core/firebase_core.dart';
 import 'package:other_screens/firebase_options.dart';
+import 'package:other_screens/presentation/dictionary/pages/dictionary.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
-import 'package:other_screens/presentation/pages/landing_page.dart'; 
+import 'package:other_screens/presentation/pages/landing_page.dart';
+import 'package:other_screens/presentation/settings/pages/settings_page.dart'; 
 import 'package:other_screens/service_locator.dart';
 
 //logging
@@ -109,7 +111,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home:  LandingPage()
+      home:  ChatPage()
         
        
     );

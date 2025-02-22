@@ -55,11 +55,21 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         message = 'The password provided is too weak';
       } else if (e.code == 'email-already-in-use') {
         message = 'An account already exists with that email.';
-      } else {
-        message = "A network error has occurred. \n Please try again!";
+      } else if (e.code == 'network_error') {
+        message = 'Please check your internet connection and try again!';
       }
       return Left(message);
+    }  catch (e) {
+    if (e.toString().contains('ApiException: 7:')) {
+      String message = '';
+
+      _log.severe("Network error during Google sign up: $e");
+      message = 'Please check your internet connection and try again!';
+      
+      return Left(message);
     }
+    return Left('An unknown error occurred during Google sign up: $e');
+  }
   }
 
   @override

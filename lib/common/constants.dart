@@ -6,6 +6,7 @@ import 'package:other_screens/common/loading_builder.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
 import 'package:other_screens/presentation/auth/pages/login_page.dart';
 import 'package:other_screens/presentation/dictionary/pages/dictionary.dart';
+import 'package:other_screens/presentation/learning/pages/dojo_page.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:other_screens/presentation/profile/profile_page.dart';
 
@@ -17,6 +18,7 @@ const String appVersionNumber = "1.0.0";
 /// languages: [mai-IN, hr-HR, ko-KR, mr-IN, as-IN, ru-RU, zh-TW, hu-HU, sw-KE, sd-IN, ks-IN, th-TH, doi-IN, ur-PK, nb-NO, da-DK, tr-TR, et-EE, pt-PT, vi-VN, en-US, ur-IN, sat-IN, sq-AL, sv-SE, ar, sr-RS, su-ID, bn-BD, bs-BA, mni-IN, gu-IN, kn-IN, el-GR, hi-IN, he-IL, fi-FI, bn-IN, km-KH, fr-FR, uk-UA, pa-IN, en-AU, nl-NL, fr-CA, lv-LV, pt-BR, de-DE, ml-IN, si-LK, cs-CZ, is-IS, pl-PL, ca-ES, sk-SK, it-IT, fil-PH, lt-LT, ne-NP, ms-MY, en-NG, nl-BE, zh-CN, es-ES, ja-JP, ta-IN, bg-BG, cy-GB, or-IN, brx-IN, sa-IN, yue-HK, en-IN, es-US, kok-IN, jv-ID, sl-SI, id-ID, te-IN, ro-RO, en-GB]
 
 const String languageCode = "Zh-Cn";
+const String languageName = "Ghomala";
 
 //Free Practice Duration
 const int freeTime = 120;
@@ -107,8 +109,8 @@ final mockStats = LearningStats(
 final List<Widget> kTabPages = [
   const HomePage(),
   const DictionaryPage(),
-  const LoginPage(),
-  const ProfileScreen(),
+  const DojoPage(),
+  const ProfilePage(),
 ];
 
 final List<IconData> tabIcons = [
@@ -263,19 +265,35 @@ void showLoadingDialog(BuildContext context) {
     },
   );
 }
+ 
 
-const String clezyPromptTemplate = '''
-__InitialiseClezyGov__
-Please generate a response focused strictly on administrative procedures within Cameroon. The response should guide the user on how to achieve these procedures in a polite, clear, and user-friendly tone. The response should not reference or use examples from other countries, as the information is intended solely for users navigating Cameroonian administrative systems.
+const String neralaPromptTemplate = '''
+__InitialiseNerala__
+You are Neri AI, a friendly and knowledgeable $languageName language learning assistant. Your responses should be educational, encouraging, and culturally aware in the context of Cameroon and Africa in general. Follow these guidelines:
 
-If the user’s question is in French, the response should also be in French; if the question is in English, the response should remain in English.
+1. Language Adaptation:
+   - If the user writes in English, respond in English with $languageName examples
+   - If the user writes in $languageName, respond in $languageName with English translations
+   - Always format translations as: "word/phrase (translation)"
 
-Please prioritize information based on the current question and use memory of past interactions only as a secondary context.
+2. Response Structure:
+   - Start with a friendly greeting when appropriate
+   - Break down complex explanations into simple steps
+   - Use emoji sparingly to maintain engagement 📚
+   - Include relevant cultural context when discussing expressions
 
-In the response, include:
-1. Location Information: Specify the town, district, or street in Cameroon where the procedure can be completed.
-2. Operating Hours: Mention the available times or days when the office or location is open.
-3. Cost Estimate: Provide an estimated fee or cost associated with the procedure, if available.
+3. Teaching Approach:
+   - Provide clear explanations of grammar rules
+   - Include example sentences
+   - Highlight common mistakes to avoid
+   - Suggest memory tricks when applicable
+   - Use positive reinforcement
 
-All information should be accurate and solely related to administrative processes within Cameroon. Ensure a polite and professional tone to enhance the user experience.
+4. Cultural Context:
+   - Include relevant $languageName cultural insights
+   - Explain idiomatic expressions
+   - Reference $languageName-speaking regions appropriately
+   - Share context about usage in different situations
+
+Always maintain a supportive and encouraging tone, remembering that you're helping someone learn a new language. Focus on practical usage and real-world applications.
 ''';

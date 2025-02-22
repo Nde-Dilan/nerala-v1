@@ -8,8 +8,8 @@ import 'package:other_screens/presentation/main/bloc/display_user_info_state.dar
 import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:other_screens/presentation/profile/widgets/custom_inkwell.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,6 @@ class ProfileScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return CustomInkWell(
                       name: optionList[index]["name"].toString(),
-                      onTap: optionList[index]["onTap"].toString(),
                       style: optionList[index]["style"] as TextStyle,
                       icon: optionList[index]["icon"] as IconData,
                     );
@@ -118,7 +117,6 @@ const double fontSize = 18;
 final optionList = [
   {
     "name": "Edit Personal Details",
-    "onTap": "detail",
     "style": const TextStyle(
         fontSize: fontSize,
         fontWeight: FontWeight.w600,
@@ -126,8 +124,7 @@ final optionList = [
     "icon": Icons.person_outline,
   },
   {
-    "name": "Appearance",
-    "onTap": "/home",
+    "name": "Settings",
     "style": const TextStyle(
         fontSize: fontSize,
         fontWeight: FontWeight.w600,
@@ -136,7 +133,6 @@ final optionList = [
   },
   {
     "name": "Notifications",
-    "onTap": "/home",
     "style": const TextStyle(
         fontSize: fontSize,
         fontWeight: FontWeight.w600,
@@ -145,7 +141,6 @@ final optionList = [
   },
   {
     "name": "Help",
-    "onTap": "/hhh",
     "style": const TextStyle(
         fontSize: fontSize,
         fontWeight: FontWeight.w600,
@@ -154,7 +149,6 @@ final optionList = [
   },
   {
     "name": "About",
-    "onTap": "/home/payment",
     "style": const TextStyle(
         fontSize: fontSize,
         fontWeight: FontWeight.w600,
@@ -163,7 +157,6 @@ final optionList = [
   },
   {
     "name": "Logout",
-    "onTap": "/",
     "style": const TextStyle(
         fontSize: fontSize,
         fontWeight: FontWeight.w600,

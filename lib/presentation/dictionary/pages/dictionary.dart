@@ -4,6 +4,8 @@ import 'package:logging/logging.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/models/main/dictionary_model.dart';
+import 'package:other_screens/presentation/chat/chat_page.dart';
+import 'package:other_screens/presentation/learning/pages/dojo_page.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:pie_menu/pie_menu.dart';
 import '../widgets/dictionary_card.dart';
@@ -21,11 +23,38 @@ class DictionaryPage extends StatefulWidget {
 class _DictionaryPageState extends State<DictionaryPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _isAscending = true; // Add this
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+  // Add this method
+  void _toggleSort() {
+    setState(() {
+      _isAscending = !_isAscending;
+      // Sort the entries
+      DictionaryEntry.sampleEntries.sort((a, b) =>
+          _isAscending ? a.word.compareTo(b.word) : b.word.compareTo(a.word));
+    });
+
+    // Show feedback to user
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Sorted ${_isAscending ? 'A to Z' : 'Z to A'}',
+          style: TextStyle(color: seedColorPalette.shade700),
+        ),
+        backgroundColor: seedColorPalette.shade100,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
   }
 
   @override
@@ -86,7 +115,7 @@ class _DictionaryPageState extends State<DictionaryPage>
               unselectedLabelColor: seedColorPalette.shade800,
               indicatorColor: seedColorPalette.shade400,
               overlayColor: WidgetStateProperty.all(seedColorPalette.shade50),
-              labelStyle: AppTextStyles.h2,
+              labelStyle: AppTextStyles.h3,
               unselectedLabelStyle: AppTextStyles.h4,
               indicator: BoxDecoration(
                 color: seedColorPalette.shade100,
@@ -96,8 +125,23 @@ class _DictionaryPageState extends State<DictionaryPage>
                 shape: BoxShape.rectangle,
               ),
               splashBorderRadius: BorderRadius.circular(99),
-              tabs: const [
-                Tab(text: 'Words'),
+              tabs: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Tab(text: 'Words'),
+                    if (_tabController.index == 0) // Only show in Words tab
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Icon(
+                          _isAscending
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
+                          size: 12,
+                        ),
+                      ),
+                  ],
+                ),
                 Tab(text: 'Phrases'),
                 Tab(text: 'History'),
               ],
@@ -167,18 +211,39 @@ class _DictionaryPageState extends State<DictionaryPage>
             );
           },
           actions: [
+            // Replace the existing Filter PieAction
             PieAction(
-              tooltip: const Text('Filter'),
-              onSelect: () => _log.info('filter'),
-              child: const Icon(Icons.filter_list),
+              tooltip: Text(_isAscending ? 'Sort Z to A' : 'Sort A to Z'),
+              onSelect: _toggleSort,
+              child: Stack(
+                children: [
+                  const Icon(Icons.filter_list),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Icon(
+                      _isAscending ? Icons.arrow_upward : Icons.arrow_downward,
+                      size: 12,
+                      color: seedColorPalette.shade700,
+                    ),
+                  ),
+                ],
+              ),
             ),
             PieAction(
               tooltip: const Text('Revise All'),
-              onSelect: () => _log.info('Revise All'),
+              onSelect: ()  => AppNavigator.push(context, DojoPage())
+              ,
               child: const Icon(HugeIcons.strokeRoundedAllBookmark),
+            ),
+            PieAction(
+              tooltip: const Text('Play With Neri'),
+              onSelect: ()=> AppNavigator.push(context, ChatPage()) ,
+              child: const Icon(HugeIcons.strokeRoundedChatBot),
             ),
           ],
           child: FloatingActionButton(
+            heroTag: 'dictionary_fab',
             backgroundColor: seedColor,
             child: Icon(HugeIcons.strokeRoundedMenu02),
             onPressed: () {},

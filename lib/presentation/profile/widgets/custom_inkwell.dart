@@ -1,15 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/domain/auth/usecases/logout.dart';
 import 'package:other_screens/presentation/pages/landing_page.dart';
+import 'package:other_screens/presentation/settings/pages/settings_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Logger _log = Logger('custom_inkwell.dart');
 
 class CustomInkWell extends StatelessWidget {
-  final String onTap;
   final String name;
   final bool? editImage;
   // final ImageSource? gallery;
@@ -17,7 +17,6 @@ class CustomInkWell extends StatelessWidget {
   final IconData icon;
 
   const CustomInkWell({
-    required this.onTap,
     required this.style,
     required this.name,
     required this.icon,
@@ -31,19 +30,43 @@ class CustomInkWell extends StatelessWidget {
 
     return Builder(builder: (context) {
       return InkWell(
-        onTap: () {
-          if (name == "Logout") {
-            // context
-            //     .read<ButtonStateCubit>()
-            //     .execute(usecase: LogoutUseCase(), params: NoParams());
-
-            LogoutUseCase z = LogoutUseCase();
-            z.call();
-
-            AppNavigator.pushReplacement(context, LandingPage());
-          }
-          if (editImage != null && editImage == true) {
-            return;
+        onTap: () async {
+          switch (name.toLowerCase()) {
+            case "logout":
+              LogoutUseCase z = LogoutUseCase();
+              z.call();
+              AppNavigator.pushReplacement(context, LandingPage());
+              break;
+            case "edit personal details":
+              // Handle edit personal details
+              break;
+            
+            case "settings":
+              AppNavigator.push(context, SettingsPage());
+              break;
+            case "help":
+              break;
+            case "about":
+              final Uri url = Uri.parse(
+                  'https://nerala-production.vercel.app/'); // Replace with your help URL
+              try {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              } catch (e) {
+                _log.severe('Could not launch help page: $e');
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Could not open about page'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              }
+              break;
+            default:
+              if (editImage != null && editImage == true) {
+                return;
+              }
           }
         },
         child: Container(
