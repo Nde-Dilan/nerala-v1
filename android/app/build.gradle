@@ -66,12 +66,11 @@ kotlinOptions {
      // Add signing config
     signingConfigs {
         release {
-              storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-        
-          
+              storeFile file("keystore/release.keystore")
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: keystoreProperties['storePassword']
+            keyAlias System.getenv("KEY_ALIAS") ?: keystoreProperties['keyAlias']
+            keyPassword System.getenv("KEY_PASSWORD") ?: keystoreProperties['keyPassword']
+       
         }
     }
 
