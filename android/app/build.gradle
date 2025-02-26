@@ -1,9 +1,3 @@
-//Geting the different signing key
-
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 
 
 plugins {
@@ -33,6 +27,13 @@ dependencies {
 //    implementation 'androidx.multidex:multidex:2.0.1'
 
 }
+
+//Geting the different signing key
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 
 
  
