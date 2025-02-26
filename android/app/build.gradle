@@ -30,9 +30,9 @@ dependencies {
 
 //Geting the different signing key
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+// def keystorePropertiesFile = rootProject.file("keystore.properties")
+// def keystoreProperties = new Properties()
+// keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 
 
@@ -67,9 +67,9 @@ kotlinOptions {
     signingConfigs {
         release {
               storeFile file("keystore/release.keystore")
-            storePassword System.getenv("KEYSTORE_PASSWORD") ?: keystoreProperties['storePassword']
-            keyAlias System.getenv("KEY_ALIAS") ?: keystoreProperties['keyAlias']
-            keyPassword System.getenv("KEY_PASSWORD") ?: keystoreProperties['keyPassword']
+            storePassword System.getenv("KEYSTORE_PASSWORD")  
+            keyAlias System.getenv("KEY_ALIAS")  
+            keyPassword System.getenv("KEY_PASSWORD")  
        
         }
     }
