@@ -19,6 +19,8 @@ const String appVersionNumber = "1.0.0";
 
 const String languageCode = "Zh-Cn";
 const String languageName = "Ghomala";
+const basePath = "assets/storyAssets/";
+
 
 //Free Practice Duration
 const int freeTime = 120;

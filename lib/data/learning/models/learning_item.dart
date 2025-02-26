@@ -1,24 +1,24 @@
 import 'package:other_screens/presentation/learning/widgets/level_item.dart';
 
-final List<LevelItem> learningItemsFamilly = [
+final List<LevelItem> learningItemsFamily = [
   LevelItem(
-    categoryName: "familly",
+    categoryName: "family",
     levelName: "Family Seed",
     levelImage: "assets/icons/category/family.png",
     isPremium: false,
   ),
   LevelItem(
-      categoryName: "familly",
+      categoryName: "family",
       levelName: "Roots of Love",
       isPremium: false,
       levelImage: "assets/icons/category/family.png"),
   LevelItem(
-      categoryName: "familly",
+      categoryName: "family",
       levelName: "Home Harmony",
       isPremium: true,
       levelImage: "assets/icons/category/family.png"),
   LevelItem(
-      categoryName: "familly",
+      categoryName: "family",
       levelName: "Legacy Builder",
       isPremium: true,
       levelImage: "assets/icons/category/family.png"),
@@ -158,3 +158,57 @@ final List<LevelItem> learningItemsSchool = [
     isPremium: true,
   ),
 ];
+
+///1: wìtmò
+// 2: wíppá
+// 3: wîttėt 
+// 4: wìtnėkwœ
+// 5: wìtè
+// 6: ntøck 
+// 7: sàmbá
+// 8: nẹ̄hã
+// 9: nǝfvœ
+// 10:nēghâm
+// 11: nchwop mó nēghâm 
+// 12: nchwop ppâ nēghâm 
+// 13: nchwop tẹ́t nēghâm 
+// 14: nchwop nekwœ nēghâm 
+// 15: nchwop tèẹ̀ nēghâm 
+// 16: nchwop ntøck nēghâm 
+// 17: nchwop sàmbá nēghâm 
+// 18: nchwop nęhã nēghâm 
+// 19: nchwop nǝfœ nēghâm 
+// 20: meghâm mbá
+
+// 21 🥱🥱🥱
+// 30 meghâm tét 
+
+
+// *Autres choses*
+// Viande : mbáp 
+// L'argent : nkãp
+// Maison : ndē
+
+// Balais : sãŋndē
+// Piment : sóck 
+// Savon : sọ̄ck 
+// Habit : ŋzẹ̄
+// School bag : pàá sǝcọụ
+// Chaussures : mǝtãpp
+// Dog: mǝvøọ
+// Caca 🥲🤧: ndzét 
+// Seau : lõnɠã
+// Chef : fœ
+// Champignons : pôó
+// Sac: pá
+// La face  : chwó
+// Mains : mbwø
+// Poptain : ŋɗám
+// Feu: mọ̀ck
+// Terre: chäáá
+// L'eau : ṣhwǝ
+// Prune :  ntṣó
+// Avocat : pĩã
+// Couscous : mǝṣãŋɠ
+// Maïs : ŋɠǝṣãŋɠ
+// Melon : ŋǝpóõ

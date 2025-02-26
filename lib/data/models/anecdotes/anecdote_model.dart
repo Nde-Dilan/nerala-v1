@@ -46,4 +46,24 @@ class Anecdote {
       keywords: data['keywords'] ?? 'Stories',
     );
   }
+
+  factory Anecdote.fromJson(Map<String, dynamic> json) {
+    return Anecdote(
+      title: json['title'] as String,
+      content: json['body'] as String,
+      thumbnailImage: json['thumbnailUrl'] as String,
+      coverImage: json['imageUrl'] as String,
+      keywords: Map<String, String>.from(json['keywords'] as Map), subtitle: json['title'] as String, category: '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'body': content,
+      'thumbnailUrl': thumbnailImage,
+      'imageUrl': coverImage,
+      'keywords': keywords,
+    };
+  }
 }

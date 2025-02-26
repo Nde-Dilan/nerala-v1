@@ -13,58 +13,89 @@ class PhraseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
+      decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: seedColorPalette.shade200, width: 1),
+        border: Border.all(color: seedColorPalette.shade200, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: ExpansionTile(
-        title: Text(
-          entry.word,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Text(
-          entry.character, // Category/Topic
-          style: TextStyle(
-            fontSize: 12,
-            color: seedColorPalette.shade700,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-        trailing: TextToSpeechButton(word: entry.word,missingWord:entry.translation),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () {}, // Optional tap handler
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16, left: 14),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Divider(),
-                const SizedBox(height: 8),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    const Icon(Icons.translate, size: 20),
-                    const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        entry.translation,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey.shade700,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            entry.word,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            entry.character,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: seedColorPalette.shade700,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                    const SizedBox(width: 9),
+                    TextToSpeechButton(
+                      word: entry.word,
+                      missingWord: entry.translation,
                     ),
                   ],
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Divider(),
+                ),
+                // Row(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     const Icon(Icons.translate, size: 20),
+                //     const SizedBox(width: 8),
+                //     Expanded(
+                //       child: Text(
+                //         entry.translation,
+                //         style: TextStyle(
+                //           fontSize: 15,
+                //           color: Colors.grey.shade700,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

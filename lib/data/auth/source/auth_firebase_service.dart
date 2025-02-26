@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -55,21 +56,32 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         message = 'The password provided is too weak';
       } else if (e.code == 'email-already-in-use') {
         message = 'An account already exists with that email.';
-      } else if (e.code == 'network_error') {
+      } else if (e.code == 'network-error') {
         message = 'Please check your internet connection and try again!';
       }
       return Left(message);
-    }  catch (e) {
-    if (e.toString().contains('ApiException: 7:')) {
+    } on PlatformException catch (e) {
       String message = '';
+      if (e.toString().contains('network_error')) {
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
 
-      _log.severe("Network error during Google sign up: $e");
-      message = 'Please check your internet connection and try again!';
-      
-      return Left(message);
+        return Left(message);
+      }
+        return Left('An unknown error occurred during Google sign in! ERROR: $e');
+    } 
+    
+     catch (e) {
+      if (e.toString().contains('network_error')) {
+        String message = '';
+
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
+
+        return Left(message);
+      }
+      return Left('An unknown error occurred during Google sign up: $e');
     }
-    return Left('An unknown error occurred during Google sign up: $e');
-  }
   }
 
   @override
@@ -87,8 +99,26 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         message = 'Wrong password provided for this user';
       }
       _log.info("Error message from source: $message");
+      if (e.toString().contains('network_error')) {
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
 
+        return Left(message);
+      }
       return Left(message);
+    } on PlatformException catch (e) {
+      String message = '';
+      if (e.toString().contains('network_error')) {
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
+
+        return Left(message);
+      }
+        return Left('An unknown error occurred during Google sign in! ERROR: $e');
+    } catch (e) {
+              _log.shout("An unknown error occurred during Google sign in! ERROR: $e");
+
+      return Left('An unknown error occurred during Google sign in! ERROR: $e');
     }
   }
 
@@ -167,9 +197,26 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       } else if (e.code == 'invalid-credential') {
         message = 'The credential received is malformed or has expired';
       }
+
+      if (e.toString().contains('network_error')) {
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
+
+        return Left(message);
+      }
+
       return Left(message);
+    } on PlatformException catch (e) {
+      String message = '';
+      if (e.toString().contains('network_error')) {
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
+
+        return Left(message);
+      }
+        return Left('An unknown error occurred during Google sign in! ERROR: $e');
     } catch (e) {
-      return const Left('An unknown error occurred during Google sign in');
+      return Left('An unknown error occurred during Google sign in! ERROR: $e');
     }
   }
 
@@ -202,7 +249,18 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         message = 'The credential received is malformed or has expired';
       }
       return Left(message);
-    } catch (e) {
+    } on PlatformException catch (e) {
+      String message = '';
+      if (e.toString().contains('network_error')) {
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
+
+        return Left(message);
+      }
+        return Left('An unknown error occurred during Google sign in! ERROR: $e');
+    }  
+    
+    catch (e) {
       return const Left('An unknown error occurred during Facebook sign in');
     }
   }
@@ -254,7 +312,18 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         message = 'The credential received is malformed or has expired';
       }
       return Left(message);
-    } catch (e) {
+    } on PlatformException catch (e) {
+      String message = '';
+      if (e.toString().contains('network_error')) {
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
+
+        return Left(message);
+      }
+        return Left('An unknown error occurred during Google sign in! ERROR: $e');
+    } 
+    
+    catch (e) {
       return Left('An unknown error occurred during Google sign up $e');
     }
   }
@@ -299,7 +368,16 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
         message = 'The credential received is malformed or has expired';
       }
       return Left(message);
-    } catch (e) {
+    } on PlatformException catch (e) {
+      String message = '';
+      if (e.toString().contains('network_error')) {
+        _log.severe("Network error during Google sign up: $e");
+        message = 'Please check your internet connection and try again!';
+
+        return Left(message);
+      }
+        return Left('An unknown error occurred during Google sign in! ERROR: $e');
+    }  catch (e) {
       return Left('An unknown error occurred during Facebook sign up: $e');
     }
   }

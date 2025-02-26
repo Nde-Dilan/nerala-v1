@@ -3,20 +3,21 @@ import "package:carousel_slider/carousel_slider.dart";
 import 'package:flutter/material.dart';
 import 'package:other_screens/common/constants.dart';
 import 'package:other_screens/data/auth/repository/auth_repository_impl.dart';
+import 'package:other_screens/data/models/anecdotes/anecdote_model.dart';
 import 'package:other_screens/data/models/main/category_model.dart';
 import 'package:other_screens/data/models/main/fun_fact_model.dart';
 import 'package:other_screens/data/models/main/learning_stats.dart';
 import 'package:other_screens/data/stories/stories.dart';
 import 'package:other_screens/domain/auth/entities/user_entity.dart';
 import 'package:other_screens/domain/auth/repository/stories_repository.dart';
-import 'package:other_screens/presentation/annecdotes/pages/annecdote_page.dart';
+import 'package:other_screens/presentation/annecdotes/pages/anecdote_page.dart';
 import 'package:other_screens/presentation/learning/pages/home_category.dart';
+import 'package:other_screens/presentation/main/methods/story_cache.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final storyRepo = StoriesRepositoryImpl();
 
-const basePath = "assets/storyAssets/";
 
 String formatUsername(String username) {
   if (username.isEmpty) return '';
@@ -37,10 +38,13 @@ Widget buildHeader(LearningStats stats, String username, BuildContext context) {
 }
 
 Widget buildCarousel(List<FunFact> funFacts) {
+  final stories =
+      storiesList.map((storyData) => Anecdote.fromJson(storyData)).toList();
+
   return CarouselSlider.builder(
-    itemCount: storiesList.length,
+    itemCount: stories.length,
     itemBuilder: (context, index, realIndex) {
-      return buildCarouselItem(index, context);
+      return buildCarouselItem(index, context, stories);
     },
     options: CarouselOptions(
       height: 200,
@@ -51,10 +55,9 @@ Widget buildCarousel(List<FunFact> funFacts) {
   );
 }
 
-Widget buildCarouselItem(int index, BuildContext context) {
-  // Get story data with type safety
-  final Map<String, dynamic> story =
-      Map<String, dynamic>.from(storiesList[index]);
+Widget buildCarouselItem(
+    int index, BuildContext context, List<Anecdote> stories) {
+  final anecdote = stories[index];
 
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -63,18 +66,7 @@ Widget buildCarouselItem(int index, BuildContext context) {
       borderRadius: BorderRadius.circular(16),
     ),
     child: GestureDetector(
-      onTap: () async {
-        final stories = await storyRepo.getStories();
-        final anecdote = stories[index];
-
-        // Safely access values with null checks and type casting
-        final String thumbnailUrl = story['thumbnailUrl']?.toString() ?? '';
-        final String imageUrl = story['imageUrl']?.toString() ?? '';
-
-        // Update anecdote properties
-        anecdote.coverImage = basePath + thumbnailUrl;
-        anecdote.thumbnailImage = basePath + thumbnailUrl;
-
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -86,16 +78,19 @@ Widget buildCarouselItem(int index, BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            basePath + (story['imageUrl']?.toString() ?? ''),
+            basePath + anecdote.thumbnailImage,
             height: 100,
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(Icons.error_outline, size: 50);
+            },
           ),
           const SizedBox(height: 8),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
-              story['body']!.toString().length > 140
-                  ? '${story['body']?.toString().substring(0, 50)}...'
-                  : story['body']?.toString() ?? '',
+              anecdote.content.length > 50
+                  ? '${anecdote.content.substring(0, 50)}...'
+                  : anecdote.content,
               textAlign: TextAlign.left,
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold),
             ),
@@ -117,16 +112,16 @@ Widget buildCategoriesGrid(List<Category> categories) {
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
-        return buildCategoryItem(categories[index], context,true);
+        return buildCategoryItem(categories[index], context, true);
       },
     ),
   );
 }
 
-Widget buildCategoryItem(Category category, BuildContext context,mounted) {
+Widget buildCategoryItem(Category category, BuildContext context, mounted) {
   return GestureDetector(
     // onTap: () => Navigator.pushNamed(context, category.route),
-    onTap: () async {    
+    onTap: () async {
       Navigator.push(
           context,
           MaterialPageRoute(

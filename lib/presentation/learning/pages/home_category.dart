@@ -83,7 +83,7 @@ class _CategoryPageState extends State<CategoryPage> {
   List<Widget> _getLearningItems() {
     switch (widget.categoryName.toLowerCase()) {
       case 'family':
-        return learningItemsFamilly;
+        return learningItemsFamily;
       case 'animals':
         return learningItemsAnimals;
       case 'nature':

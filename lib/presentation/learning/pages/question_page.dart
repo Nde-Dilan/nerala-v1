@@ -8,6 +8,7 @@ import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
 import 'package:other_screens/data/learning/mock/word_building_mock_data.dart';
 import 'package:other_screens/data/learning/models/question.dart';
 import 'package:other_screens/data/learning/models/question_state.dart';
+import 'package:other_screens/data/music/source/audio_service.dart';
 import 'package:other_screens/presentation/congrats/pages/congrats_page.dart';
 import 'package:other_screens/presentation/learning/pages/times_up_page.dart';
 import 'package:other_screens/presentation/learning/services/learning_stats_service.dart';
@@ -47,12 +48,16 @@ class QuestionPage extends StatefulWidget {
 class _QuestionPageState extends State<QuestionPage> {
   late QuestionState _state;
   late LearningStatsService _statsService;
+  late AudioService _audioService;
+
   bool? _showOverlay;
   bool? _isCorrect;
 
   @override
   void initState() {
     _initializeStats();
+    _audioService = AudioService();
+    _audioService.pause();
     // Filter questions by category
     List<Question> categoryQuestions = allQuestions
         .where((question) =>

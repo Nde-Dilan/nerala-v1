@@ -7,6 +7,7 @@ import 'package:other_screens/presentation/main/bloc/display_user_info_cubit.dar
 import 'package:other_screens/presentation/main/bloc/display_user_info_state.dart';
 import 'package:other_screens/presentation/main/pages/home_page.dart';
 import 'package:other_screens/presentation/profile/widgets/custom_inkwell.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -44,17 +45,48 @@ class ProfilePage extends StatelessWidget {
                   BlocBuilder<UserInfoDisplayCubit, UserInfoDisplayState>(
                     builder: (context, state) {
                       if (state is UserInfoLoading) {
-                        return Center(child: const DefaultLoadingBuilder());
+                        return const CircleAvatar(
+                          radius: 70.0,
+                          child: DefaultLoadingBuilder(),
+                        );
                       }
 
                       if (state is UserInfoLoaded) {
                         return CircleAvatar(
                           radius: 70.0,
-                          backgroundImage: NetworkImage(state.user.image),
+                          backgroundColor: seedColorPalette.shade100,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: state.user.image,
+                              width: 140,
+                              height: 140,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  const DefaultLoadingBuilder(),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.person,
+                                size: 70,
+                                color: seedColorPalette.shade300,
+                              ),
+                              cacheManager: CachedNetworkImageProvider
+                                  .defaultCacheManager,
+                              memCacheWidth: 300, // Optimize memory cache size
+                              maxWidthDiskCache:
+                                  600, // Optimize disk cache size
+                            ),
+                          ),
                         );
                       }
 
-                      return Container();
+                      return CircleAvatar(
+                        radius: 70.0,
+                        backgroundColor: seedColorPalette.shade100,
+                        child: Icon(
+                          Icons.person,
+                          size: 70,
+                          color: seedColorPalette.shade300,
+                        ),
+                      );
                     },
                   ),
                   Positioned(
@@ -81,7 +113,9 @@ class ProfilePage extends StatelessWidget {
               ),
               BlocBuilder<UserInfoDisplayCubit, UserInfoDisplayState>(
                 builder: (BuildContext context, state) {
-                  if (state is UserInfoLoading) {}
+                  if (state is UserInfoLoading) {
+                    return DefaultLoadingBuilder();
+                  }
                   if (state is UserInfoLoaded) {
                     return Text(
                       state.user.firstName,

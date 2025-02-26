@@ -96,7 +96,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {
       _audioService.pause();
     } else if (state == AppLifecycleState.resumed) {
-      _audioService.play();
+      // _audioService.play();
     }
   }
 
@@ -111,7 +111,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home:  ChatPage()
+      home:  LandingPage()
         
        
     );

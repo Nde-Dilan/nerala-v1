@@ -21,7 +21,7 @@ class AnecdoteHeader extends StatelessWidget {
       children: [
         // Cover Image
         Image.asset(
-          coverImage,
+          basePath + coverImage,
           width: double.infinity,
           height: 200,
           fit: BoxFit.cover,
@@ -38,7 +38,7 @@ class AnecdoteHeader extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.asset(
-                thumbnailImage,
+                basePath + thumbnailImage,
                 width: 90,
                 height: 90,
                 fit: BoxFit.cover,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
 import 'package:other_screens/common/constants.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';  
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
@@ -37,19 +38,40 @@ class ChatPage extends StatelessWidget {
             ),
             textStyle: AppTextStyles.body.copyWith(color: Colors.white),
           ),
-          llmMessageStyle: LlmMessageStyle(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: seedColor.withAlpha(10),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-          ),
+         llmMessageStyle: LlmMessageStyle(
+  icon: Icons.assistant_rounded, // Or Icons.school_rounded for educational context
+  iconColor: seedColor,
+  iconDecoration: BoxDecoration(
+    color: seedColorPalette.shade50,
+    shape: BoxShape.circle,
+    border: Border.all(
+      color: seedColor.withAlpha(20),
+      width: 2,
+    ),
+  ),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(12),
+    boxShadow: [
+      BoxShadow(
+        color: seedColor.withAlpha(10),
+        blurRadius: 8,
+        offset: const Offset(0, 2),
+      ),
+    ],
+  ),
+  markdownStyle: MarkdownStyleSheet(
+    p: AppTextStyles.body,
+    code: AppTextStyles.body.copyWith(
+      backgroundColor: seedColorPalette.shade50,
+      fontFamily: 'monospace',
+    ),
+    blockquote: AppTextStyles.body.copyWith(
+      color: seedColorPalette.shade700,
+      fontStyle: FontStyle.italic,
+    ),
+  ),
+),
           chatInputStyle: ChatInputStyle(
             decoration: BoxDecoration(
               color: Colors.white,

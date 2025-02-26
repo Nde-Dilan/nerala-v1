@@ -33,7 +33,21 @@ jobs:
             ${{ runner.os }}-pub-cache-
 
       - run: flutter pub get
+
+      - name: Decrypt Keystore
+        run: |
+          openssl aes-256-cbc -d -in android/app/keystore/release.keystore.enc -out android/app/keystore/release.keystore -k ${{ secrets.KEYSTORE_PASSWORD }}
+
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
       - run: flutter build apk --release --split-per-abi
+
+      
 
       # Step to fetch existing tags
       - name: Fetch tags
@@ -71,3 +85,9 @@ jobs:
           artifacts: "build/app/outputs/flutter-apk/*"
           tag: ${{ env.tag }}
           token: ${{ secrets.TOKEN }}
+
+
+
+
+
+# 

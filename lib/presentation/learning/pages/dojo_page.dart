@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:other_screens/common/helpers/navigator/app_navigator.dart';
+import 'package:other_screens/presentation/main/pages/home_page.dart';
 
 class DojoPage extends StatelessWidget {
   const DojoPage({super.key});
@@ -6,7 +8,16 @@ class DojoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Dojo Page"),),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Dojo Page"),
+        leading: BackButton(
+          onPressed: () {
+            AppNavigator.pushReplacement(context, HomePage());
+          },
+        ),
+      ),
+      body: Text("Dojo Page"),
     );
   }
 }

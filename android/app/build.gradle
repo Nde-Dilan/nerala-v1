@@ -1,3 +1,11 @@
+//Geting the different signing key
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+
+
 plugins {
     id "com.android.application"
     // START: FlutterFire Configuration
@@ -57,10 +65,11 @@ kotlinOptions {
      // Add signing config
     signingConfigs {
         release {
-              storeFile file("keystore/release.keystore")
-              storePassword  "123456789"
-              keyAlias "nerala-key"
-              keyPassword  "123456789"
+              storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        
           
         }
     }
